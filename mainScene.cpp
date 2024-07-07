@@ -8,19 +8,19 @@ Widget::Widget(QWidget *parent)
 {
     ui->setupUi(this);
     setFixedSize(960,540);
-    ui->option_comboBox->addItem("960×540");
     ui->option_comboBox->addItem(("640×360"));
+    ui->option_comboBox->addItem("960×540");
     ui->option_comboBox->addItem(("1280×720"));
-    connect(ui->option_comboBox,&QComboBox::activated,[=](int index){
-        if(index==0)
-            setFixedSize(960,540);
-        else if(index==1)
-            setFixedSize(640,1360);
-        else
-            setFixedSize(1280,720);
+    ui->option_comboBox->setCurrentIndex((1));
+    connect(ui->option_comboBox,&QComboBox::activated,this,[=](int index){
+        wigetMultiplier=index+2;
+        setFixedSize(320*wigetMultiplier,180*wigetMultiplier);
     });
-    connect(ui->singleSortBtn,&QPushButton::clicked,[=](){
-        chooseScene=new singleChooseScene(this);
+    connect(ui->singleSortBtn,&QPushButton::clicked,this,[=](){
+        chooseScene=new singleChooseScene(wigetMultiplier,nullptr);
+        chooseScene->setAttribute(Qt::WA_DeleteOnClose);
+        this->hide();
+        chooseScene->show();
     });
 }
 

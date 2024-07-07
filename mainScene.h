@@ -20,6 +20,7 @@ public:
 
 private:
     Ui::Widget *ui;
+    int wigetMultiplier=3;
     singleChooseScene* chooseScene=nullptr;
 };
 #endif // MAINSCENE_H

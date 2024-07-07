@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>659</width>
+    <width>640</width>
     <height>360</height>
    </rect>
   </property>
@@ -43,7 +43,7 @@
      </property>
      <property name="sizeHint" stdset="0">
       <size>
-       <width>358</width>
+       <width>40</width>
        <height>20</height>
       </size>
      </property>
@@ -59,7 +59,7 @@
      </property>
      <property name="sizeHint" stdset="0">
       <size>
-       <width>358</width>
+       <width>40</width>
        <height>20</height>
       </size>
      </property>
@@ -131,7 +131,7 @@
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>40</height>
+       <height>30</height>
       </size>
      </property>
     </spacer>
@@ -151,6 +151,12 @@
    </item>
    <item row="2" column="1">
     <widget class="QPushButton" name="singleSortBtn">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="minimumSize">
       <size>
        <width>200</width>
@@ -164,6 +170,12 @@
    </item>
    <item row="4" column="1">
     <widget class="QPushButton" name="multySortBtn">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="minimumSize">
       <size>
        <width>200</width>

@@ -1,4 +1,4 @@
-#include "widget.h"
+#include "mainScene.h"
 
 #include <QApplication>
 
