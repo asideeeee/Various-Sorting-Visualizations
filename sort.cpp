@@ -1,22 +1,21 @@
 #include"sort.h"
 
-//Êı×éĞ´Èë
-void Sort::insertData(vector<int>& input) {
+//æ’å…¥çš„å®ç°
+void Sort::insertData(const vector<int>& input) {
     data = input;
 }
 
-//Êı×éÇå³ı
+//æ¸…é™¤çš„å®ç°
 void Sort::clearData() {
     data.clear();
 }
 
-//Ã°ÅİÅÅĞò
+//å†’æ³¡æ’åºçš„å®ç°
 void Sort::bubbleSort(vector<int> arr) {
     int n = arr.size();
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - i - 1; j++) {
             if (arr[j] > arr[j + 1]) {
-                // ½»»» arr[j] and arr[j+1]
                 int temp = arr[j];
                 arr[j] = arr[j + 1];
                 arr[j + 1] = temp;

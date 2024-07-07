@@ -1,17 +1,17 @@
-#include <vector>
+ï»¿#include <vector>
+#include<iostream>
 using namespace std;
-
 class Sort {
 private:
     vector<int> data;
 
 public:
-    void insertData(vector<int>& input);
-    //Êı×éµÄĞ´Èë
+    void insertData(const vector<int>& input);
+    //æ’å…¥æ•°æ®
 
     void clearData();
-    //Êı×éµÄÇå³ı
+    //æ¸…é™¤æ•°æ®
 
-    void bubbleSort(vector<int> arr);
-    //Ã°ÅİÅÅĞò
+    void bubbleSort(vector<int>arr);
+    //å†’æ³¡æ’åº
 };
