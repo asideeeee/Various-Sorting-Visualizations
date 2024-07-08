@@ -35,3 +35,7 @@ Widget::~Widget()
 {
     delete ui;
 }
+
+void Widget::receiveSample(std::vector<int>& arr){
+
+}

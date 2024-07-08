@@ -17,10 +17,13 @@ class Widget : public QWidget
 public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
+    std::vector<int> sample;
+    void receiveSample(std::vector<int>& arr);
 
 private:
     Ui::Widget *ui;
     int wigetMultiplier=3;
     singleChooseScene* chooseScene=nullptr;
+
 };
 #endif // MAINSCENE_H

@@ -1,4 +1,4 @@
-#include "setcase.h"
+﻿#include "setcase.h"
 #include "ui_setcase.h"
 
 setCase::setCase(int sortType,int wigetMultiplier,QWidget *parent)
@@ -50,9 +50,79 @@ setCase::setCase(int sortType,int wigetMultiplier,QWidget *parent)
         ui->textLabel->setText("时间复杂度：\n平均：O(d * (n + k))\n最低：O(d * (n + k))\n最高：O(d * (n + k))\n稳定性：稳定\n\n简介：基数排序是一种多关键字排序算法，它根据元素的位数依次进行排序，先按照最低有效位进行桶排序，然后再依次按照次低有效位进行桶排序，直到所有位数排完。基数排序的时间复杂度为 O(d * (n + k))，其中 d 是数字位数，k 是基数（桶的个数），是一种稳定的排序。");
         break;
     }
+    //记录本窗口所属的最顶层的根窗口,即mainScene窗口
+    QWidget *widget = this;
+    QWidget *parentTemp = widget->parentWidget();
+    while (parentTemp) {
+        widget = parentTemp;
+        parentTemp = widget->parentWidget();
+    }
+    root = dynamic_cast<Widget*>(widget);
+    //将本窗口的样本数据发送函数和根窗口的数据接收函数相连
+    connect(ui->customizeBtn,&QPushButton::released,getRootScene(this),&Widget::receiveSample);
+    connect(ui->randomBtn,&QPushButton::released,getRootScene(this),&Widget::receiveSample);
 }
 
 setCase::~setCase()
 {
     delete ui;
 }
+
+void setCase::on_customizeBtn_released()
+{
+
+}
+
+Widget* setCase::getRootScene(QWidget *widget){
+    QWidget *parent = widget->parentWidget();
+    while (parent) {
+        widget = parent;
+        parent = widget->parentWidget();
+    }
+    return dynamic_cast<Widget*>(widget);
+}
+
+void setCase::sendSample()
+{
+
+}
+
+
+void setCase::sendRandSample()
+{
+
+}
+
+std::vector<int> setCase::genRandSample(int cap)
+{
+    std::vector<int> samp;
+    if(cap < 1 || cap > MAX_CAPACITY)
+        return samp;
+    samp.reserve(cap);
+
+    std::srand(std::time(nullptr));
+
+    for(int i=0;i<cap;i++){
+        int rdmNumber =std::rand()%MAX_CAPACITY+1;
+        samp.push_back(rdmNumber);
+    }
+
+    return samp;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

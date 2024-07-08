@@ -69,6 +69,7 @@ singleChooseScene::singleChooseScene(int wigetMultiplier,QWidget *parent)
         setcase->setAttribute(Qt::WA_DeleteOnClose);
         this->hide();
         setcase->show();
+
     });
 }
 
