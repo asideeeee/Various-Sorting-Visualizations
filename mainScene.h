@@ -2,11 +2,12 @@
 #define MAINSCENE_H
 
 #include <QWidget>
-#include"singlechoosescene.h"
+#include "singlechoosescene.h"
 
 QT_BEGIN_NAMESPACE
-namespace Ui {
-class Widget;
+namespace Ui
+{
+    class Widget;
 }
 QT_END_NAMESPACE
 
@@ -18,12 +19,11 @@ public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
     std::vector<int> sample;
-    void receiveSample(std::vector<int>& arr);
+    void receiveSample(std::vector<int> &arr);
 
 private:
     Ui::Widget *ui;
-    int wigetMultiplier=3;
-    singleChooseScene* chooseScene=nullptr;
-
+    int wigetMultiplier = 3;
+    QWidget *chooseScene = nullptr;
 };
 #endif // MAINSCENE_H
