@@ -15,9 +15,13 @@ public:
     explicit setCase(int sortType,int wigetMultiplier=3,QWidget *parent = nullptr);
     ~setCase();
 
+private slots:
+    void on_customizeBtn_released();
+
 private:
     Ui::setCase *ui;
     int wigetMultiplier;
+
 };
 
 #endif // SETCASE_H

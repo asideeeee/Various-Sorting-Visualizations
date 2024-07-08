@@ -56,3 +56,9 @@ setCase::~setCase()
 {
     delete ui;
 }
+
+void setCase::on_customizeBtn_released()
+{
+
+}
+
