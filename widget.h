@@ -17,13 +17,13 @@ class Widget;
 }
 QT_END_NAMESPACE
 
-class Widget : public QWidget
+class mainWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    Widget(QWidget *parent = nullptr);
-    ~Widget();
+    mainWidget(QWidget *parent = nullptr);
+    ~mainWidget();
 private:
     Ui::Widget *ui;
     //对象成员

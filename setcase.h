@@ -3,8 +3,8 @@
 
 #include <QWidget>
 #include "mainScene.h"
-#include <cstdlib>
-#include <ctime>
+#include <qmessagebox.h>
+
 
 namespace Ui {
 class setCase;
@@ -15,22 +15,23 @@ class setCase : public QWidget
     Q_OBJECT
 
 public:
-    explicit setCase(int sortType,int wigetMultiplier=3,QWidget *parent = nullptr);
+    explicit setCase(int sortType,int wigetMultiplier=3,QWidget* prev = nullptr,QWidget *parent = nullptr);
     ~setCase();
-    Widget* root;
+    std::vector<int> sample;
 
 private slots:
     void on_customizeBtn_released();
 
-    void on_confirmBtn_released();
+    void on_startSort_released();
+
+    void on_backBtn_released();
 
 private:
     Ui::setCase *ui;
     int wigetMultiplier;
-    Widget* getRootScene(QWidget *widget);
-    void sendSample();
-    void sendRandSample();
-    std::vector<int> genRandSample(int cap);
+    QWidget* previous;
+
+    void setRandSample();
 };
 
 #define MAX_CAPACITY 300

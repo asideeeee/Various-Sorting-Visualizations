@@ -18,7 +18,7 @@ Widget::Widget(QWidget *parent)
         setFixedSize(320*wigetMultiplier,180*wigetMultiplier);
     });
     connect(ui->singleSortBtn,&QPushButton::clicked,this,[=](){
-        chooseScene=new singleChooseScene(wigetMultiplier,nullptr);
+        chooseScene=new singleChooseScene(wigetMultiplier,this);
         chooseScene->setAttribute(Qt::WA_DeleteOnClose);
         this->hide();
         chooseScene->show();
@@ -34,8 +34,4 @@ Widget::Widget(QWidget *parent)
 Widget::~Widget()
 {
     delete ui;
-}
-
-void Widget::receiveSample(std::vector<int>& arr){
-
 }

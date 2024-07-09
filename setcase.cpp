@@ -1,9 +1,10 @@
 ﻿#include "setcase.h"
 #include "ui_setcase.h"
 
-setCase::setCase(int sortType,int wigetMultiplier,QWidget *parent)
+setCase::setCase(int sortType,int wigetMultiplier,QWidget* prev,QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::setCase)
+    , previous(prev)
 {
     setFixedSize(320*wigetMultiplier,180*wigetMultiplier);
     ui->setupUi(this);
@@ -50,17 +51,9 @@ setCase::setCase(int sortType,int wigetMultiplier,QWidget *parent)
         ui->textLabel->setText("时间复杂度：\n平均：O(d * (n + k))\n最低：O(d * (n + k))\n最高：O(d * (n + k))\n稳定性：稳定\n\n简介：基数排序是一种多关键字排序算法，它根据元素的位数依次进行排序，先按照最低有效位进行桶排序，然后再依次按照次低有效位进行桶排序，直到所有位数排完。基数排序的时间复杂度为 O(d * (n + k))，其中 d 是数字位数，k 是基数（桶的个数），是一种稳定的排序。");
         break;
     }
-    //记录本窗口所属的最顶层的根窗口,即mainScene窗口
-    QWidget *widget = this;
-    QWidget *parentTemp = widget->parentWidget();
-    while (parentTemp) {
-        widget = parentTemp;
-        parentTemp = widget->parentWidget();
-    }
-    root = dynamic_cast<Widget*>(widget);
-    //将本窗口的样本数据发送函数和根窗口的数据接收函数相连
-    connect(ui->customizeBtn,&QPushButton::released,getRootScene(this),&Widget::receiveSample);
-    connect(ui->randomBtn,&QPushButton::released,getRootScene(this),&Widget::receiveSample);
+    connect(ui->randomBtn,&QPushButton::released,this,&setCase::setRandSample);
+    ui->sampModeDisp->setText("<还未提供样本>");
+
 }
 
 setCase::~setCase()
@@ -70,48 +63,66 @@ setCase::~setCase()
 
 void setCase::on_customizeBtn_released()
 {
+    QString input = ui->textEdit->toPlainText();
+    QStringList stringList = input.split(' ', Qt::SkipEmptyParts);
+    sample.clear();
 
-}
-
-Widget* setCase::getRootScene(QWidget *widget){
-    QWidget *parent = widget->parentWidget();
-    while (parent) {
-        widget = parent;
-        parent = widget->parentWidget();
+    bool ok;
+    for (const QString &str : stringList) {
+        int number = str.toInt(&ok);
+        if (ok) {
+            sample.push_back(number);
+        }
     }
-    return dynamic_cast<Widget*>(widget);
 }
 
-void setCase::sendSample()
+void setCase::setRandSample()
 {
-
-}
-
-
-void setCase::sendRandSample()
-{
-
-}
-
-std::vector<int> setCase::genRandSample(int cap)
-{
-    std::vector<int> samp;
-    if(cap < 1 || cap > MAX_CAPACITY)
-        return samp;
-    samp.reserve(cap);
+    bool isInt=false;
+    QString inp=ui->randomCap->text();
+    int cap = inp.toInt(&isInt);
+    if(!isInt){
+        QMessageBox::warning(this,"格式错误","输入的值不是整数.");
+        return;
+    }
+    if(cap < 1){
+        QMessageBox::warning(this,"容量过低","样本容量不能小于1.");
+        return;
+    }
+    else if(cap > MAX_CAPACITY){
+        QString msg = QString("样本容量不能高于 %1.").arg(MAX_CAPACITY);
+        QMessageBox::warning(this,"容量过高",msg);
+        return;
+    }
+    sample.reserve(cap);
 
     std::srand(std::time(nullptr));
 
     for(int i=0;i<cap;i++){
         int rdmNumber =std::rand()%MAX_CAPACITY+1;
-        samp.push_back(rdmNumber);
+        sample.push_back(rdmNumber);
     }
-
-    return samp;
+    return;
 }
 
-void setCase::on_confirmBtn_released()
+void setCase::on_startSort_released()
 {
+    if(sample.empty())
+    {
+        QMessageBox::warning(this,"空样本错误","还未选择样本");
+        return;
+    }
+    if(sample.size()>MAX_CAPACITY){
+        QString msg = QString("样本容量不能高于 %1.请减少样本数量.").arg(MAX_CAPACITY);
+        QMessageBox::warning(this,"样本过量",msg);
+        return;
+    }
+    //样本选择界面下开始排序展示的按钮,等排序可视化页面完成后再实现
+}
 
+void setCase::on_backBtn_released()
+{
+    previous->show();
+    this->close();
 }
 
