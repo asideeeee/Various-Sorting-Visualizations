@@ -22,6 +22,8 @@ public:
 private slots:
     void on_customizeBtn_released();
 
+    void on_confirmBtn_released();
+
 private:
     Ui::setCase *ui;
     int wigetMultiplier;

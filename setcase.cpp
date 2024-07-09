@@ -110,19 +110,8 @@ std::vector<int> setCase::genRandSample(int cap)
     return samp;
 }
 
+void setCase::on_confirmBtn_released()
+{
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
 
