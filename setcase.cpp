@@ -74,6 +74,10 @@ void setCase::on_customizeBtn_released()
             sample.push_back(number);
         }
     }
+    int cap =sample.size();
+    QString msg =QString("<已启用自定义样本.当前容量为 %1>").arg(QString::number(cap));
+    ui->sampModeDisp->setText(msg);
+    return;
 }
 
 void setCase::setRandSample()
@@ -102,6 +106,8 @@ void setCase::setRandSample()
         int rdmNumber =std::rand()%MAX_CAPACITY+1;
         sample.push_back(rdmNumber);
     }
+    QString msg2 = QString("<已启用随机样本.当前容量为 %1>").arg(QString::number(cap));
+    ui->sampModeDisp->setText(msg2);
     return;
 }
 
