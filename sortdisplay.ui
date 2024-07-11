@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>SortDisplay</class>
- <widget class="QDialog" name="SortDisplay">
+ <widget class="QWidget" name="SortDisplay">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -17,7 +17,7 @@
    <item>
     <layout class="QVBoxLayout" name="canvaBox">
      <item>
-      <widget class="BaseCanva" name="widget" native="true"/>
+      <widget class="BaseCanva" name="canva" native="true"/>
      </item>
     </layout>
    </item>

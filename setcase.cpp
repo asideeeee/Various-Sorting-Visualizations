@@ -1,7 +1,7 @@
 ﻿#include "setcase.h"
 #include "ui_setcase.h"
 
-setCase::setCase(int sortType,int wigetMultiplier,QWidget* prev,QWidget *parent)
+setCase::setCase(int sortType,QWidget* prev,QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::setCase)
     , previous(prev)
@@ -125,7 +125,12 @@ void setCase::on_startSort_released()
         QMessageBox::warning(this,"样本过量",msg);
         return;
     }
-    //样本选择界面下开始排序展示的按钮,等排序可视化页面完成后再实现
+    //样本选择界面下开始排序展示的按钮
+    SortDisplay* sortDisplay = new SortDisplay(previous);
+    SortObject *sortObj = creatSortObject(sortType,sortDisplay->getCanva());
+    sortDisplay->getCanva()->setSortParameter(sortObj,&sample);
+    this->hide();
+    sortDisplay->show();
 }
 
 void setCase::on_backBtn_released()
@@ -165,3 +170,18 @@ void setCase::on_sequentialBtn_released()
     return;
 }
 
+SortObject* creatSortObject(int type,QObject* parent){
+    switch (type) {
+    case 1: return new SimpleSelectSort(parent);
+    case 2: return new HalfInsertSort(parent);
+    case 3: return new ShellSort(parent);
+    case 4: return new BubbleSort(parent);
+    case 5: return new QuickSort(parent);
+    case 6: return new SimpleSelectSort(parent);
+    case 7: return new HeapSort(parent);
+    case 8: return new TreeSelectSort(parent);
+    case 9: return new MergeSort(parent);
+    case 10: return new RadixSort(parent);
+    default: return nullptr;
+    }
+}
