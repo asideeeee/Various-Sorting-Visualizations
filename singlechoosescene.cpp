@@ -8,7 +8,7 @@ singleChooseScene::singleChooseScene(int wigetMultiplier,QWidget* prev,QWidget *
     , ui(new Ui::singleChooseScene)
     , previous(prev)
 {
-    setFixedSize(320*wigetMultiplier,180*wigetMultiplier);
+    //setFixedSize(320*wigetMultiplier,180*wigetMultiplier);
     ui->setupUi(this);
     //给每个排序选择按钮安排信号槽，跳转到相应的页面
     connect(ui->sortButton1,&QPushButton::clicked,this,[=](){
@@ -72,8 +72,8 @@ singleChooseScene::singleChooseScene(int wigetMultiplier,QWidget* prev,QWidget *
         setcase->setAttribute(Qt::WA_DeleteOnClose);
         this->hide();
         setcase->show();
-
     });
+    this->resize(1280,720);
 }
 
 singleChooseScene::~singleChooseScene()

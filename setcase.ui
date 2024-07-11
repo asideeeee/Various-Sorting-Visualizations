@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
+  <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,4,0,8,1,1,0">
      <property name="leftMargin">
@@ -141,17 +141,21 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QPushButton" name="customizeBtn">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>自定义样本</string>
-         </property>
-        </widget>
+        <layout class="QVBoxLayout" name="verticalLayout_2" stretch="2">
+         <item>
+          <widget class="QPushButton" name="customizeBtn">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>自定义样本</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item>
         <widget class="QTextEdit" name="textEdit">
@@ -199,7 +203,20 @@
        <item>
         <widget class="QLineEdit" name="randomCap">
          <property name="placeholderText">
-          <string>输入随机样本容量规模</string>
+          <string>输入样本规模</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="sequentialBtn">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>顺序样本</string>
          </property>
         </widget>
        </item>

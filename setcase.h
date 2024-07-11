@@ -26,6 +26,8 @@ private slots:
 
     void on_backBtn_released();
 
+    void on_sequentialBtn_released();
+
 private:
     Ui::setCase *ui;
     int wigetMultiplier;
@@ -34,6 +36,6 @@ private:
     void setRandSample();
 };
 
-#define MAX_CAPACITY 300
+#define MAX_CAPACITY 100
 
 #endif // SETCASE_H
