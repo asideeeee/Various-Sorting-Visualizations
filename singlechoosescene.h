@@ -12,7 +12,7 @@ class singleChooseScene : public QWidget
     Q_OBJECT
 
 public:
-    explicit singleChooseScene(int wigetMultiplier=3,QWidget* prev = nullptr,QWidget *parent = nullptr);
+    explicit singleChooseScene(QWidget* prev = nullptr,QWidget *parent = nullptr);
     ~singleChooseScene();
 
 private slots:

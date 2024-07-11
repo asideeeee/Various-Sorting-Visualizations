@@ -6,8 +6,6 @@ setCase::setCase(int sortType,QWidget* prev,QWidget *parent)
     , ui(new Ui::setCase)
     , previous(prev)
 {
-
-    //setFixedSize(320*wigetMultiplier,180*wigetMultiplier);
     ui->setupUi(this);
     switch(sortType)
     {

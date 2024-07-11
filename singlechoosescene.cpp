@@ -3,12 +3,11 @@
 #include "ui_singlechoosescene.h"
 
 
-singleChooseScene::singleChooseScene(int wigetMultiplier,QWidget* prev,QWidget *parent)
+singleChooseScene::singleChooseScene(QWidget* prev,QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::singleChooseScene)
     , previous(prev)
 {
-    //setFixedSize(320*wigetMultiplier,180*wigetMultiplier);
     ui->setupUi(this);
     //给每个排序选择按钮安排信号槽，跳转到相应的页面
     connect(ui->sortButton1,&QPushButton::clicked,this,[=](){
