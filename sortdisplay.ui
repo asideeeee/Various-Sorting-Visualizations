@@ -17,7 +17,7 @@
    <item>
     <layout class="QVBoxLayout" name="canvaBox">
      <item>
-      <widget class="BaseCanva" name="canva" native="true"/>
+      <widget class="BaseCanva" name="baseCanva"/>
      </item>
     </layout>
    </item>
@@ -195,9 +195,8 @@
  <customwidgets>
   <customwidget>
    <class>BaseCanva</class>
-   <extends>QWidget</extends>
+   <extends>QGraphicsView</extends>
    <header location="global">basecanva.h</header>
-   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

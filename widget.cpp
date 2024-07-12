@@ -6,6 +6,7 @@ Widget::Widget(QWidget *parent)
     , ui(new Ui::Widget)
 {
     ui->setupUi(this);
+    //设置窗口大小
     this->setFixedSize(900,740);
     //添加数据量
     ui->cBox_num->addItem("10");
@@ -63,7 +64,8 @@ Widget::Widget(QWidget *parent)
     ui->cBox_secondAlgo->addItem("选择排序");
     ui->cBox_secondAlgo->setCurrentIndex(0);
 
-
+    //以下两行代码进行的行为描述:
+    //创建两个继承于QThread的类,也就是说创建了两个独立运行的线程,用于同时展示两种排序
     sort_Alogrithm*temp1=new sort_Alogrithm(this);
     second_sort*temp2=new second_sort(this);
 
@@ -97,6 +99,8 @@ Widget::Widget(QWidget *parent)
         if(index_alogrithm_second<0){QMessageBox::critical(this, "错误信息", "没有选择合法的排序算法");return;}
         if(num!=0&&!columns_second.isEmpty())
         {
+            //用户的设置通过了参数合法性检验.
+            //以下代码依次调用了关键信息设置函数,和线程启动函数
             emit temp2->recInformation(index_alogrithm_second,speed,numbers);
             temp2->start();
         }
@@ -119,6 +123,8 @@ Widget::Widget(QWidget *parent)
     connect(temp2,&second_sort::Al_swap_columns,this,&Widget::swapColumns_second);
     connect(temp2,&second_sort::Al_swap_columns,this,&Widget::updateColumns_second);
 }
+
+//创建样本函数.
 void Widget:: generateData(){
     if(num==0){QMessageBox::critical(this, "错误信息", "没有选择数据量");return;}
     //如果数组不为空需要清除之前数组

@@ -2,11 +2,10 @@
 #define SETCASE_H
 
 #include <QWidget>
-#include "mainScene.h"
 #include <qmessagebox.h>
 #include "sortobject.h"
-#include "sortdisplay.h"
-#include "allsort.h"
+
+//此窗口的逻辑编写已完成
 
 namespace Ui {
 class setCase;

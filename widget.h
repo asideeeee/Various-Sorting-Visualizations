@@ -1,6 +1,9 @@
 #ifndef WIDGET_H
 #define WIDGET_H
 
+/////////////////
+/// 注意:该文件需要做一点修改,此处仅作演示
+
 #include <QWidget>
 #include<QLabel>
 #include<QPushButton>

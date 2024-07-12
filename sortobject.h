@@ -15,9 +15,9 @@ class SortObject : public QObject
 public:
     explicit SortObject(QObject *parent = nullptr);
 
-    virtual void sort(int count,int interval);
-    virtual void pause();
-    virtual void draw(QPainter* painter,int width,int height);
+    virtual void sort(int count,int interval) = 0;
+    virtual void pause() = 0;
+    virtual void draw(QPainter* painter,int width,int height) = 0;
 
 signals:
     void runStatusChanged(bool running);

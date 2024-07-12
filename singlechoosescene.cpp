@@ -2,6 +2,7 @@
 #include"setcase.h"
 #include "ui_singlechoosescene.h"
 
+//此窗口的逻辑编写已完成
 
 singleChooseScene::singleChooseScene(QWidget* prev,QWidget *parent)
     : QWidget(parent)

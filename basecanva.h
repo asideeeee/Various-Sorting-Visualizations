@@ -5,20 +5,15 @@
 #include <QWidget>
 #include "sortobject.h"
 
-class RectItem:public QGraphicsRectItem{
 
+class RectItem : public QObject, public QGraphicsRectItem {
+    Q_OBJECT
 public:
-    //对构造函数进行改造.现在x,y指的是矩形左下角的坐标而不是原函数规定的右上角
-    RectItem(qreal x,qreal y,qreal width,qreal height)
-        :QGraphicsRectItem(x,y+height,width,height)
-        ,xpos(x)
-        ,ypos(y){}
-
-    //注意:此处两个坐标均为左下角的坐标
-    qreal xpos,ypos;
+    RectItem(qreal x, qreal y, qreal width, qreal height)
+        : QGraphicsRectItem(x, y, width, height) {
+        setFlag(QGraphicsItem::ItemIsMovable);
+    }
 };
-
-
 ////////////
 /// \brief The Animate class
 /// 为多线程执行动画准备的一个形式上的类
@@ -47,12 +42,13 @@ private:
 ////////////
 /// \brief The BaseCanva class
 /// 画布控件类
-class BaseCanva : public QWidget
+class BaseCanva : public QGraphicsView
 {
     Q_OBJECT
 public:
     explicit BaseCanva(QWidget *parent = nullptr);
 
+    void initializeRect();
     void sort(int cnt,int interval);
     void pause();
     void setSortParameter(SortObject* in,std::vector<int>* sampleIn);
@@ -65,7 +61,8 @@ signals:
 public:
     SortObject *sortObj=nullptr;
     std::vector<int>* sample;
-    std::vector<RectItem*> allRect;
+    QList<RectItem*> allRect;
+    QGraphicsScene *scene;
 };
 
 #endif // BASECANVA_H

@@ -9,7 +9,6 @@ SortDisplay::SortDisplay(QWidget* prev,QWidget *parent)
 {
     ui->setupUi(this);
     resize(1920,1080);
-
 }
 
 SortDisplay::~SortDisplay()
@@ -19,7 +18,7 @@ SortDisplay::~SortDisplay()
 
 BaseCanva *SortDisplay::getCanva()
 {
-    return ui->canva;
+    return ui->baseCanva;
 }
 
 

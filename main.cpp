@@ -1,6 +1,8 @@
 #include "mainScene.h"
-#include "widget.h"
+//#include "widget.h"
 #include <QApplication>
+
+//此窗口的逻辑编写已完成
 
 int main(int argc, char *argv[])
 {

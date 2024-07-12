@@ -1,5 +1,9 @@
 ﻿#include "setcase.h"
 #include "ui_setcase.h"
+#include "sortdisplay.h"
+#include "allsort.h"
+
+//此窗口的逻辑编写已完成
 
 setCase::setCase(int sortType,QWidget* prev,QWidget *parent)
     : QWidget(parent)
@@ -98,7 +102,7 @@ void setCase::setRandSample()
         return;
     }
     sample.clear();
-    sample.reserve(cap);
+    sample.resize(cap,0);;
 
     std::srand(std::time(nullptr));
 
@@ -126,9 +130,10 @@ void setCase::on_startSort_released()
     //样本选择界面下开始排序展示的按钮
     SortDisplay* sortDisplay = new SortDisplay(previous);
     SortObject *sortObj = creatSortObject(sortType,sortDisplay->getCanva());
-    sortDisplay->getCanva()->setSortParameter(sortObj,&sample);
     this->hide();
     sortDisplay->show();
+    sortDisplay->getCanva()->setSortParameter(sortObj,&sample);
+    sortDisplay->getCanva()->initializeRect();
 }
 
 void setCase::on_backBtn_released()
@@ -157,7 +162,7 @@ void setCase::on_sequentialBtn_released()
         return;
     }
     sample.clear();
-    sample.reserve(cap);
+    sample.resize(cap,0);
     for(int i=0;i<cap;i++){
         sample[i]=i+1;
     }

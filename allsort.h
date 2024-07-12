@@ -2,7 +2,7 @@
 #define ALLSORT_H
 
 #include "sortobject.h"
-
+#include "basecanva.h"
 
 ///////////////
 //直接选择排序类,编号1
@@ -11,13 +11,18 @@ class SimpleInsertSort : public SortObject
     Q_OBJECT
 public:
     explicit SimpleInsertSort(QObject *parent = nullptr):
-        SortObject(parent){}
+        SortObject(parent)
+        ,parentCanva(dynamic_cast<BaseCanva*>(parent))
+    {}
 
     void sort(int count,int interval) override;
     void pause() override;
     void draw(QPainter* painter,int width,int height) override;
 
+    //该类的parentCanva成员即画布.请通过parent访问所需要的数据
 signals:
+private:
+    BaseCanva* parentCanva;
 };
 
 
@@ -28,13 +33,17 @@ class HalfInsertSort : public SortObject
     Q_OBJECT
 public:
     explicit HalfInsertSort(QObject *parent = nullptr):
-        SortObject(parent){}
+        SortObject(parent)
+        ,parentCanva(dynamic_cast<BaseCanva*>(parent))
+    {}
 
     void sort(int count,int interval) override;
     void pause() override;
     void draw(QPainter* painter,int width,int height) override;
 
 signals:
+private:
+    BaseCanva* parentCanva;
 };
 
 
@@ -45,13 +54,17 @@ class ShellSort : public SortObject
     Q_OBJECT
 public:
     explicit ShellSort(QObject *parent = nullptr):
-        SortObject(parent){}
+        SortObject(parent)
+        ,parentCanva(dynamic_cast<BaseCanva*>(parent))
+    {}
 
     void sort(int count,int interval) override;
     void pause() override;
     void draw(QPainter* painter,int width,int height) override;
 
 signals:
+private:
+    BaseCanva* parentCanva;
 };
 
 
@@ -62,13 +75,17 @@ class BubbleSort : public SortObject
     Q_OBJECT
 public:
     explicit BubbleSort(QObject *parent = nullptr):
-        SortObject(parent){}
+        SortObject(parent)
+        ,parentCanva(dynamic_cast<BaseCanva*>(parent))
+    {}
 
     void sort(int count,int interval) override;
     void pause() override;
     void draw(QPainter* painter,int width,int height) override;
 
 signals:
+private:
+    BaseCanva* parentCanva;
 };
 
 
@@ -79,12 +96,17 @@ class QuickSort : public SortObject
     Q_OBJECT
 public:
     explicit QuickSort(QObject *parent = nullptr):
-        SortObject(parent){}
+        SortObject(parent)
+        ,parentCanva(dynamic_cast<BaseCanva*>(parent))
+    {}
+
     void sort(int count,int interval) override;
     void pause() override;
     void draw(QPainter* painter,int width,int height) override;
 
 signals:
+private:
+    BaseCanva* parentCanva;
 };
 
 
@@ -95,13 +117,17 @@ class SimpleSelectSort : public SortObject
     Q_OBJECT
 public:
     explicit SimpleSelectSort(QObject *parent = nullptr):
-        SortObject(parent){}
+        SortObject(parent)
+        ,parentCanva(dynamic_cast<BaseCanva*>(parent))
+    {}
 
     void sort(int count,int interval) override;
     void pause() override;
     void draw(QPainter* painter,int width,int height) override;
 
 signals:
+private:
+    BaseCanva* parentCanva;
 };
 
 //////////////
@@ -111,13 +137,17 @@ class HeapSort : public SortObject
     Q_OBJECT
 public:
     explicit HeapSort(QObject *parent = nullptr):
-        SortObject(parent){}
+        SortObject(parent)
+        ,parentCanva(dynamic_cast<BaseCanva*>(parent))
+    {}
 
     void sort(int count,int interval) override;
     void pause() override;
     void draw(QPainter* painter,int width,int height) override;
 
 signals:
+private:
+    BaseCanva* parentCanva;
 };
 
 //////////////
@@ -127,13 +157,17 @@ class TreeSelectSort : public SortObject
     Q_OBJECT
 public:
     explicit TreeSelectSort(QObject *parent = nullptr):
-        SortObject(parent){}
+        SortObject(parent)
+        ,parentCanva(dynamic_cast<BaseCanva*>(parent))
+    {}
 
     void sort(int count,int interval) override;
     void pause() override;
     void draw(QPainter* painter,int width,int height) override;
 
 signals:
+private:
+    BaseCanva* parentCanva;
 };
 
 
@@ -144,13 +178,17 @@ class MergeSort : public SortObject
     Q_OBJECT
 public:
     explicit MergeSort(QObject *parent = nullptr):
-        SortObject(parent){}
+        SortObject(parent)
+        ,parentCanva(dynamic_cast<BaseCanva*>(parent))
+    {}
 
     void sort(int count,int interval) override;
     void pause() override;
     void draw(QPainter* painter,int width,int height) override;
 
 signals:
+private:
+    BaseCanva* parentCanva;
 };
 
 
@@ -161,13 +199,17 @@ class RadixSort : public SortObject
     Q_OBJECT
 public:
     explicit RadixSort(QObject *parent = nullptr):
-        SortObject(parent){}
+        SortObject(parent)
+        ,parentCanva(dynamic_cast<BaseCanva*>(parent))
+    {}
 
     void sort(int count,int interval) override;
     void pause() override;
     void draw(QPainter* painter,int width,int height) override;
 
 signals:
+private:
+    BaseCanva* parentCanva;
 };
 
 #endif // ALLSORT_H
