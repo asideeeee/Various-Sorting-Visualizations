@@ -11,7 +11,7 @@ class SimpleInsertSort : public SortObject
     Q_OBJECT
 public:
     explicit SimpleInsertSort(QObject *parent = nullptr):
-        SortObject(parent)
+        SortObject(1,parent)
         ,parentCanva(dynamic_cast<BaseCanva*>(parent))
     {}
 
@@ -33,7 +33,7 @@ class HalfInsertSort : public SortObject
     Q_OBJECT
 public:
     explicit HalfInsertSort(QObject *parent = nullptr):
-        SortObject(parent)
+        SortObject(2,parent)
         ,parentCanva(dynamic_cast<BaseCanva*>(parent))
     {}
 
@@ -54,7 +54,7 @@ class ShellSort : public SortObject
     Q_OBJECT
 public:
     explicit ShellSort(QObject *parent = nullptr):
-        SortObject(parent)
+        SortObject(3,parent)
         ,parentCanva(dynamic_cast<BaseCanva*>(parent))
     {}
 
@@ -75,7 +75,7 @@ class BubbleSort : public SortObject
     Q_OBJECT
 public:
     explicit BubbleSort(QObject *parent = nullptr):
-        SortObject(parent)
+        SortObject(4,parent)
         ,parentCanva(dynamic_cast<BaseCanva*>(parent))
     {}
 
@@ -96,7 +96,7 @@ class QuickSort : public SortObject
     Q_OBJECT
 public:
     explicit QuickSort(QObject *parent = nullptr):
-        SortObject(parent)
+        SortObject(5,parent)
         ,parentCanva(dynamic_cast<BaseCanva*>(parent))
     {}
 
@@ -117,7 +117,7 @@ class SimpleSelectSort : public SortObject
     Q_OBJECT
 public:
     explicit SimpleSelectSort(QObject *parent = nullptr):
-        SortObject(parent)
+        SortObject(6,parent)
         ,parentCanva(dynamic_cast<BaseCanva*>(parent))
     {}
 
@@ -137,7 +137,7 @@ class HeapSort : public SortObject
     Q_OBJECT
 public:
     explicit HeapSort(QObject *parent = nullptr):
-        SortObject(parent)
+        SortObject(7,parent)
         ,parentCanva(dynamic_cast<BaseCanva*>(parent))
     {}
 
@@ -157,7 +157,7 @@ class TreeSelectSort : public SortObject
     Q_OBJECT
 public:
     explicit TreeSelectSort(QObject *parent = nullptr):
-        SortObject(parent)
+        SortObject(8,parent)
         ,parentCanva(dynamic_cast<BaseCanva*>(parent))
     {}
 
@@ -178,7 +178,7 @@ class MergeSort : public SortObject
     Q_OBJECT
 public:
     explicit MergeSort(QObject *parent = nullptr):
-        SortObject(parent)
+        SortObject(9,parent)
         ,parentCanva(dynamic_cast<BaseCanva*>(parent))
     {}
 
@@ -199,7 +199,7 @@ class RadixSort : public SortObject
     Q_OBJECT
 public:
     explicit RadixSort(QObject *parent = nullptr):
-        SortObject(parent)
+        SortObject(10,parent)
         ,parentCanva(dynamic_cast<BaseCanva*>(parent))
     {}
 

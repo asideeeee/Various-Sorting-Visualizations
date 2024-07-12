@@ -40,6 +40,6 @@ private:
 
 SortObject* creatSortObject(int type,QObject* parent);
 
-#define MAX_CAPACITY 100
+#define MAX_CAPACITY 300
 
 #endif // SETCASE_H

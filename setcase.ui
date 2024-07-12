@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>样本选择界面</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
@@ -26,11 +26,22 @@
       <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,4,16,6">
        <item>
         <widget class="QPushButton" name="backBtn">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
          <property name="maximumSize">
           <size>
            <width>50</width>
            <height>16777215</height>
           </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>13</pointsize>
+          </font>
          </property>
          <property name="text">
           <string>返回</string>
@@ -118,6 +129,11 @@
        </item>
        <item>
         <widget class="QLabel" name="label">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;自定义样本输入框&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
@@ -147,8 +163,13 @@
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>30</height>
+             <height>45</height>
             </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>15</pointsize>
+            </font>
            </property>
            <property name="text">
             <string>自定义样本</string>
@@ -165,6 +186,11 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
          <property name="placeholderText">
           <string>输入自定义的样本数据.仅支持整数输入.每两个数据之间请以空格隔开</string>
          </property>
@@ -173,7 +199,7 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="5,2,4,2,5">
        <item>
         <spacer name="horizontalSpacer_5">
          <property name="orientation">
@@ -192,8 +218,13 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>30</height>
+           <height>45</height>
           </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>15</pointsize>
+          </font>
          </property>
          <property name="text">
           <string>随机样本</string>
@@ -202,6 +233,17 @@
        </item>
        <item>
         <widget class="QLineEdit" name="randomCap">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>45</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
          <property name="placeholderText">
           <string>输入样本规模</string>
          </property>
@@ -212,8 +254,13 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>30</height>
+           <height>45</height>
           </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>15</pointsize>
+          </font>
          </property>
          <property name="text">
           <string>顺序样本</string>
@@ -318,9 +365,15 @@
        </item>
        <item>
         <widget class="QPushButton" name="startSort">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
          <property name="font">
           <font>
-           <pointsize>11</pointsize>
+           <pointsize>15</pointsize>
           </font>
          </property>
          <property name="text">

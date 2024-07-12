@@ -23,7 +23,7 @@ void BaseCanva::initializeRect()
     //显示边框预留空位宽度
     const int leftSpace =0;
     const int rightSpace=0;
-    const int topSpace=80;
+    const int topSpace=0;
     const int bottomSpace=0;
 
     //以下是计算获得的每个长方体的大小参数
@@ -34,9 +34,11 @@ void BaseCanva::initializeRect()
     for(int i=0;i<sample->size();i++){
         int tempHeight=heightWeight*sample->at(i);
         RectItem* temp = new RectItem(leftSpace+averageWidth*i,height-bottomSpace-tempHeight,averageWidth,tempHeight);
+        temp->setBrush(Qt::white);
         allRect.push_back(temp);
         scene->addItem(temp);
     }
+    scene->setSceneRect(this->rect());
     return;
 }
 

@@ -9,6 +9,8 @@ SortDisplay::SortDisplay(QWidget* prev,QWidget *parent)
 {
     ui->setupUi(this);
     resize(1920,1080);
+    ui->baseCanva->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->baseCanva->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
 SortDisplay::~SortDisplay()
@@ -21,4 +23,15 @@ BaseCanva *SortDisplay::getCanva()
     return ui->baseCanva;
 }
 
+Ui::SortDisplay *SortDisplay::getSortDisplayUi()
+{
+    return ui;
+}
+
+
+
+void SortDisplay::on_startButton_released()
+{
+
+}
 

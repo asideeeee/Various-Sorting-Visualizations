@@ -13,7 +13,7 @@ class SortObject : public QObject
 {
     Q_OBJECT
 public:
-    explicit SortObject(QObject *parent = nullptr);
+    explicit SortObject(int type,QObject *parent = nullptr);
 
     virtual void sort(int count,int interval) = 0;
     virtual void pause() = 0;
@@ -24,7 +24,7 @@ signals:
 
 private:
     std::vector<int>* sample;
-
+    int type = -1;
 };
 
 #endif // SORTOBJECT_H

@@ -1,5 +1,6 @@
 #include "sortobject.h"
 
-SortObject::SortObject(QObject *parent)
+SortObject::SortObject(int type, QObject *parent)
     : QObject{parent}
+    , type(type)
 {}

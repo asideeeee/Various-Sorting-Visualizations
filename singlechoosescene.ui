@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>642</width>
-    <height>357</height>
+    <height>376</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>排序方法选择界面</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,1,5,0">
    <item>

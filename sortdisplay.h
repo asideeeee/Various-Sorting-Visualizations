@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include "basecanva.h"
-#include "sortObject.h"
+#include <QLabel>
 
 /////////////
 ///
@@ -19,7 +19,9 @@ class SortDisplay : public QWidget
 public:
     explicit SortDisplay(QWidget* prev,QWidget *parent = nullptr);
     ~SortDisplay();
+
     BaseCanva* getCanva();
+    Ui::SortDisplay* getSortDisplayUi();
 
 private:
     Ui::SortDisplay *ui;
