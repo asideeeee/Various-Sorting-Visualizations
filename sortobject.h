@@ -8,6 +8,7 @@
 #include <QGraphicsView>
 #include <QEventLoop>
 #include <QThread>
+#include <QTimer>
 
 class SortObject : public QObject
 {

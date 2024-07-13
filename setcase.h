@@ -11,13 +11,13 @@ namespace Ui {
 class setCase;
 }
 
-class setCase : public QWidget
+class SetCase : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit setCase(int sortType,QWidget* prev = nullptr,QWidget *parent = nullptr);
-    ~setCase();
+    explicit SetCase(int sortType,QWidget* prev = nullptr,QWidget *parent = nullptr);
+    ~SetCase();
     std::vector<int> sample;
 
 private slots:

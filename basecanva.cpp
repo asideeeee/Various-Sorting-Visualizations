@@ -1,4 +1,5 @@
 #include "basecanva.h"
+#include <QDebug>
 
 BaseCanva::BaseCanva(QWidget *parent)
     : QGraphicsView{parent}
@@ -6,7 +7,7 @@ BaseCanva::BaseCanva(QWidget *parent)
     setAttribute(Qt::WA_StyledBackground,true);
     scene = new QGraphicsScene(this);
     this->setScene(scene);
-
+    scene->setSceneRect(this->rect());
     this->show();
 }
 
@@ -16,70 +17,133 @@ void BaseCanva::initializeRect()
     //画布大小参数
     const int width=this->width();
     const int height=this->height();
+
     //样本状态参数
-    const int cap=sample->size();
-    const int maxVal=*std::max_element(sample->begin(),sample->end());
-    const int minVal=*std::min_element(sample->begin(),sample->end());
-    //显示边框预留空位宽度
-    const int leftSpace =0;
-    const int rightSpace=0;
-    const int topSpace=0;
-    const int bottomSpace=0;
+    cap = sample->size();
+    maxVal = *std::max_element(sample->begin(),sample->end());
+    minVal = *std::min_element(sample->begin(),sample->end());
+    maxDifference = maxVal-minVal;
 
     //以下是计算获得的每个长方体的大小参数
-    const int maxDifference=maxVal-minVal;
     const int averageWidth=width/cap;
     const int heightWeight=(height-topSpace)/maxDifference;
 
     for(int i=0;i<sample->size();i++){
         int tempHeight=heightWeight*sample->at(i);
-        RectItem* temp = new RectItem(leftSpace+averageWidth*i,height-bottomSpace-tempHeight,averageWidth,tempHeight);
+        // 这里的 (0, 0) 是相对于矩形项自身坐标系的位置
+        RectItem* temp = new RectItem(0, 0, averageWidth, tempHeight);
         temp->setBrush(Qt::white);
+
+        // 这里的 setPos 设置的是矩形在场景中的位置
+        temp->setPos(leftSpace + averageWidth * i, height - bottomSpace - tempHeight);
         allRect.push_back(temp);
         scene->addItem(temp);
     }
-    scene->setSceneRect(this->rect());
+
     return;
 }
 
+
+//矩形尺寸更新函数
+void BaseCanva::repaintRect()
+{
+    //画布大小参数
+    const int width=this->width();
+    const int height=this->height();
+
+    //以下是计算获得的每个长方体的大小参数
+    const int averageWidth=width/cap;
+    const int heightWeight=(height-topSpace)/maxDifference;
+
+    for(int i=0;i<cap;i++){
+        int tempHeight=heightWeight*sample->at(i);
+
+        // 这里的 setPos 设置的是矩形在场景中的位置
+        allRect[i]->setRect(0, 0, averageWidth, tempHeight);
+        allRect[i]->setPos(leftSpace + averageWidth * i, height - bottomSpace - tempHeight);
+    }
+
+    return;
+}
+
+
+//画布接收数据函数
 void BaseCanva::setSortParameter(SortObject *in,std::vector<int>* sampleIn)
 {
     sortObj=in;
     sample=sampleIn;
+    return;
 }
 
-//交换函数
-void BaseCanva::animatedSwap(RectItem *start, RectItem *destination,int duration)
-{
-    QThread* thread1=new QThread;
-    QThread* thread2=new QThread;
-    Animate* anime1 = new Animate(start,destination->x(),destination->y(),duration);
-    Animate* anime2 = new Animate(destination,start->x(),start->y(),duration);
-    anime1->moveToThread(thread1);
-    anime2->moveToThread(thread2);
-    QObject::connect(thread1,&QThread::started,anime1,&Animate::execute);
-    QObject::connect(thread2,&QThread::started,anime2,&Animate::execute);
-    QObject::connect(anime1, &Animate::finished, thread1, &QThread::quit);
-    QObject::connect(anime2, &Animate::finished, thread2, &QThread::quit);
-    QObject::connect(thread1, &QThread::finished, anime1, &QObject::deleteLater);
-    QObject::connect(thread2, &QThread::finished, anime2, &QObject::deleteLater);
-    QObject::connect(thread1, &QThread::finished, thread1, &QObject::deleteLater);
-    QObject::connect(thread2, &QThread::finished, thread2, &QObject::deleteLater);
 
-    thread1->start();
-    thread2->start();
+//交换函数,会自动进行颜色标记
+void BaseCanva::animatedSwap(int i,int j)
+{
+    int duration = interval;
+    swapping1 = i;
+    swapping2 = j;
+    RectItem *start = allRect[i];
+    RectItem *destination = allRect[j];
+    start->setBrush(Qt::red);
+    destination->setBrush(Qt::red);
+
+    QPointF pos1 = start->pos();
+    QPointF pos2 = destination->pos();
+
+    QPropertyAnimation *anime1=new QPropertyAnimation(start,"pos");
+    anime1->setDuration(duration);
+    anime1->setStartValue(pos1);
+    anime1->setEndValue(QPointF(pos2.x(),pos1.y()));
+    anime1->start(QAbstractAnimation::DeleteWhenStopped);
+
+    QPropertyAnimation *anime2=new QPropertyAnimation(destination,"pos");
+    anime2->setDuration(duration);
+    anime2->setStartValue(pos2);
+    anime2->setEndValue(QPointF(pos1.x(),pos2.y()));
+    anime2->start(QAbstractAnimation::DeleteWhenStopped);
+
+    anime1->start();
+    anime2->start();
+    connect(anime2,&QPropertyAnimation::finished,this,&BaseCanva::cancelSwapMark);
 
     return;
 }
 
-//动画执行函数
-void Animate::execute()
+
+//比较函数,效果上相当于返回sample[i]<sample[j].在编写排序算法时,进行样本间比较请使用该函数.
+bool BaseCanva::lessCmp(int i, int j)
 {
-    QPropertyAnimation *animation=new QPropertyAnimation(rectItem,"pos");
-    animation->setDuration(duration);
-    animation->setStartValue(rectItem->pos());
-    animation->setEndValue(QPointF(endx,endy));
-    animation->start(QAbstractAnimation::DeleteWhenStopped);
-    emit finished();
+    allRect[i]->setBrush(QColor(0x33ccff));
+    allRect[j]->setBrush(QColor(0x33ccff));
+    QTimer* temp = new QTimer(this);
+    temp->isSingleShot();
+    connect(temp,&QTimer::timeout,this,[=](){
+        allRect[i]->setBrush(Qt::white);
+        allRect[j]->setBrush(Qt::white);
+        temp->deleteLater();
+    });
+    temp->start(interval);
+    return sample->at(i)<sample->at(j);
+}
+
+
+//取消标记函数.会自动调用,不要手动调用.
+void BaseCanva::cancelSwapMark()
+{
+    allRect[swapping1]->setBrush(Qt::white);
+    allRect[swapping2]->setBrush(Qt::white);
+    swapping1 = swapping2 = 0;
     return;
 }
+
+
+//全局窗口中画布的自适应更新大小函数
+void BaseCanva::resizeEvent(QResizeEvent *event)
+{
+    QGraphicsView::resizeEvent(event);
+    scene->setSceneRect(this->rect());
+    if(cap)
+        repaintRect();
+    return;
+}
+

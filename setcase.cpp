@@ -5,7 +5,9 @@
 
 //此窗口的逻辑编写已完成
 
-setCase::setCase(int sortType,QWidget* prev,QWidget *parent)
+
+//构造函数
+SetCase::SetCase(int sortType,QWidget* prev,QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::setCase)
     , previous(prev)
@@ -54,17 +56,22 @@ setCase::setCase(int sortType,QWidget* prev,QWidget *parent)
         ui->textLabel->setText("时间复杂度：\n平均：O(d * (n + k))\n最低：O(d * (n + k))\n最高：O(d * (n + k))\n稳定性：稳定\n\n简介：基数排序是一种多关键字排序算法，它根据元素的位数依次进行排序，先按照最低有效位进行桶排序，然后再依次按照次低有效位进行桶排序，直到所有位数排完。\n基数排序的时间复杂度为 O(d * (n + k))，其中 d 是数字位数，k 是基数（桶的个数），是一种稳定的排序。");
         break;
     }
-    connect(ui->randomBtn,&QPushButton::released,this,&setCase::setRandSample);
+    connect(ui->randomBtn,&QPushButton::released,this,&SetCase::setRandSample);
     ui->sampModeDisp->setText("<还未提供样本>");
     this->resize(1280,720);
 }
 
-setCase::~setCase()
+
+//析构函数
+SetCase::~SetCase()
 {
     delete ui;
 }
 
-void setCase::on_customizeBtn_released()
+
+//手动输入样本按钮槽函数.
+//注意:此函数还没有编写对非法输入的处理逻辑
+void SetCase::on_customizeBtn_released()
 {
     QString input = ui->textEdit->toPlainText();
     QStringList stringList = input.split(' ', Qt::SkipEmptyParts);
@@ -83,7 +90,9 @@ void setCase::on_customizeBtn_released()
     return;
 }
 
-void setCase::setRandSample()
+
+//设置随机化样本按钮槽函数
+void SetCase::setRandSample()
 {
     bool isInt=false;
     QString inp=ui->randomCap->text();
@@ -115,7 +124,9 @@ void setCase::setRandSample()
     return;
 }
 
-void setCase::on_startSort_released()
+
+//开始排序按钮槽函数
+void SetCase::on_startSort_released()
 {
     if(sample.empty())
     {
@@ -129,21 +140,29 @@ void setCase::on_startSort_released()
     }
     //样本选择界面下开始排序展示的按钮
     SortDisplay* sortDisplay = new SortDisplay(previous);
+    sortDisplay->setAttribute(Qt::WA_DeleteOnClose);
     SortObject *sortObj = creatSortObject(sortType,sortDisplay->getCanva());
     this->hide();
     sortDisplay->show();
     sortDisplay->getCanva()->setSortParameter(sortObj,&sample);
     sortDisplay->getCanva()->initializeRect();
+    connect(sortDisplay,&SortDisplay::displayWindowClosed,this,&SetCase::close);
+
+    return;
 }
 
-void setCase::on_backBtn_released()
+
+//返回上一个界面按钮槽函数
+void SetCase::on_backBtn_released()
 {
     previous->show();
     this->close();
+    return;
 }
 
 
-void setCase::on_sequentialBtn_released()
+//生成序列化样本槽函数
+void SetCase::on_sequentialBtn_released()
 {
     bool isInt=false;
     QString inp=ui->randomCap->text();
@@ -173,6 +192,8 @@ void setCase::on_sequentialBtn_released()
     return;
 }
 
+
+//创建排序算法对象的辅助函数,用于连接展示界面与不同的排序算法
 SortObject* creatSortObject(int type,QObject* parent){
     switch (type) {
     case 1: return new SimpleSelectSort(parent);

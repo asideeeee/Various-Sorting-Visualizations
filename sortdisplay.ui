@@ -238,7 +238,7 @@
       </spacer>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="buttonVLayout" stretch="0,0,0,0,0,0,0">
+      <layout class="QVBoxLayout" name="buttonVLayout" stretch="0,0,0,0,0,0,0,0">
        <property name="sizeConstraint">
         <enum>QLayout::SetDefaultConstraint</enum>
        </property>
@@ -302,6 +302,18 @@
           </widget>
          </item>
         </layout>
+       </item>
+       <item>
+        <widget class="QPushButton" name="debugButton">
+         <property name="font">
+          <font>
+           <pointsize>15</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>函数测试按钮</string>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="withdrawButton">

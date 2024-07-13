@@ -23,9 +23,26 @@ public:
     BaseCanva* getCanva();
     Ui::SortDisplay* getSortDisplayUi();
 
+private slots:
+    void on_startButton_released();
+
+    void on_exitButton_released();
+
+    void on_pauseButton_released();
+
+    void on_nextButton_released();
+
+    void on_withdrawButton_released();
+
+    void on_speedSpinBox_valueChanged(int arg1);
+
+    void on_debugButton_released();
+
+signals:
+    void displayWindowClosed();
+
 private:
     Ui::SortDisplay *ui;
-
     QWidget* previous;
 };
 
