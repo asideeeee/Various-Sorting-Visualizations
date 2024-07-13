@@ -62,7 +62,6 @@ void BaseCanva::repaintRect()
         allRect[i]->setRect(0, 0, averageWidth, tempHeight);
         allRect[i]->setPos(leftSpace + averageWidth * i, height - bottomSpace - tempHeight);
     }
-
     return;
 }
 
@@ -111,19 +110,28 @@ void BaseCanva::animatedSwap(int i,int j)
 
 
 //比较函数,效果上相当于返回sample[i]<sample[j].在编写排序算法时,进行样本间比较请使用该函数.
-bool BaseCanva::lessCmp(int i, int j)
+void BaseCanva::animatedCmp(int i, int j)
 {
+    allRect[lastI]->setBrush(Qt::white);
+    allRect[lastJ]->setBrush(Qt::white);
+    lastI=i;
+    lastJ=j;
     allRect[i]->setBrush(QColor(0x33ccff));
     allRect[j]->setBrush(QColor(0x33ccff));
-    QTimer* temp = new QTimer(this);
-    temp->isSingleShot();
-    connect(temp,&QTimer::timeout,this,[=](){
-        allRect[i]->setBrush(Qt::white);
-        allRect[j]->setBrush(Qt::white);
-        temp->deleteLater();
+    return;
+}
+
+
+//在排序完成后请调用该函数,将已经排序完成的样本标成绿色.
+void BaseCanva::completeMark()
+{
+    SortCompleteThread* temp = new SortCompleteThread(cap,&allRect);
+    connect(temp, &QThread::finished, temp, &QThread::deleteLater);
+    connect(temp,&SortCompleteThread::updateRequest,this,[=]{
+        viewport()->update();
     });
-    temp->start(interval);
-    return sample->at(i)<sample->at(j);
+    temp->start();
+    return;
 }
 
 
@@ -147,3 +155,14 @@ void BaseCanva::resizeEvent(QResizeEvent *event)
     return;
 }
 
+
+//辅助线程的函数
+void SortCompleteThread::run()
+{
+    for(int i=0;i<cap;i++){
+        arr->at(i)->setBrush(Qt::green);
+        QThread::msleep(1);
+        emit updateRequest();
+    }
+    return;
+}

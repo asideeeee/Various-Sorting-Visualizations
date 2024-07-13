@@ -185,7 +185,7 @@ void SetCase::on_sequentialBtn_released()
     for(int i=0;i<cap;i++){
         sample[i]=i+1;
     }
-    std::random_shuffle(sample.begin(),sample.end());
+    //std::random_shuffle(sample.begin(),sample.end());
 
     QString msg2 = QString("<已启用序列化样本.当前容量为 %1>").arg(QString::number(cap));
     ui->sampModeDisp->setText(msg2);

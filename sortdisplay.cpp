@@ -12,6 +12,7 @@ SortDisplay::SortDisplay(QWidget* prev,QWidget *parent)
     resize(1920,1080);
     ui->baseCanva->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->baseCanva->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->speedSpinBox->setValue(60);
 }
 
 SortDisplay::~SortDisplay()
@@ -67,7 +68,8 @@ void SortDisplay::on_withdrawButton_released()
 
 void SortDisplay::on_speedSpinBox_valueChanged(int arg1)
 {
-
+    ui->baseCanva->interval=arg1;
+    return;
 }
 
 /// \Attention
@@ -78,8 +80,7 @@ void SortDisplay::on_speedSpinBox_valueChanged(int arg1)
 void SortDisplay::on_debugButton_released()
 {
     qDebug()<<"已收到动画展示要求";
-    ui->baseCanva->lessCmp(0,1);
+    ui->baseCanva->completeMark();
     return;
-    ui->baseCanva->animatedSwap(0,1,60);
 }
 

@@ -3,8 +3,15 @@
 
 #include <QObject>
 #include <QWidget>
-#include "sortobject.h"
+#include <QGraphicsRectItem>
+#include <QPropertyAnimation>
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QEventLoop>
+#include <QThread>
+#include <QTimer>
 
+class SortObject;
 
 class RectItem : public QObject, public QGraphicsRectItem {
     Q_OBJECT
@@ -35,6 +42,11 @@ public:
     //暂停函数,还未实现
     void pause();
 
+signals:
+
+public slots:
+    //取消交换时红色标记的函数.会自动调用,不要手动调用.
+    void cancelSwapMark();
     //设置排序参数,不需要在编写排序算法时调用
     void setSortParameter(SortObject* in,std::vector<int>* sampleIn);
 
@@ -42,15 +54,9 @@ public:
     void animatedSwap(int i, int j);
     //比较函数,效果上相当于返回sample[i]<sample[j].
     //在编写排序算法时,进行样本间比较请使用该函数.
-    bool lessCmp(int i,int j);
+    void animatedCmp(int i,int j);
     //在排序完成后请调用该函数,将已经排序完成的样本标成绿色.
     void completeMark();
-
-signals:
-
-public slots:
-    //取消交换时红色标记的函数.会自动调用,不要手动调用.
-    void cancelSwapMark();
 
 protected:
     //对窗口缩放的响应函数
@@ -78,8 +84,40 @@ public:
     int swapping1 = 0;
     int swapping2 = 0;
 
+    //记录上一次被比较的两个元素索引
+    int lastI = 0;
+    int lastJ = 0;
+
     //操作间间隔
     int interval = 60;
 };
 
+
+
+//////////////////////
+///
+//为了防止占用GUI线程,新建一个专为completeMark函数准备的标记
+class SortCompleteThread:public QThread{
+    Q_OBJECT
+
+public:
+    SortCompleteThread(int cap,QList<RectItem*>* arr,QObject* parent = nullptr):cap(cap)
+        ,arr(arr)
+        ,QThread(parent)
+    {}
+
+private:
+    int cap;
+    QList<RectItem*>* arr;
+
+signals:
+    void updateRequest();
+
+protected:
+    void run() override;
+};
+
 #endif // BASECANVA_H
+
+
+
