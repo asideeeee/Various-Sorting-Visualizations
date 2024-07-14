@@ -9,10 +9,13 @@ class SimpleInsertSort : public SortObject
 {
     Q_OBJECT
 public:
-    explicit SimpleInsertSort(BaseCanva* canva,QObject *parent = nullptr):
-        SortObject(1,canva)
+    explicit SimpleInsertSort(std::vector<int>* sampIn,QObject *parent = nullptr):
+        SortObject(1,sampIn)
     {}
 
+    void InsertSort(std::vector<int>& R,int n);
+
+public slots:
     void sort() override;
 
 };
@@ -24,10 +27,11 @@ class HalfInsertSort : public SortObject
 {
     Q_OBJECT
 public:
-    explicit HalfInsertSort(BaseCanva* canva,QObject *parent = nullptr):
-        SortObject(2,canva)
+    explicit HalfInsertSort(std::vector<int>* sampIn,QObject *parent = nullptr):
+        SortObject(2,sampIn)
     {}
 
+public slots:
     void sort() override;
 
 };
@@ -39,10 +43,11 @@ class ShellSort : public SortObject
 {
     Q_OBJECT
 public:
-    explicit ShellSort(BaseCanva* canva,QObject *parent = nullptr):
-        SortObject(3,canva)
+    explicit ShellSort(std::vector<int>* sampIn,QObject *parent = nullptr):
+        SortObject(3,sampIn)
     {}
 
+public slots:
     void sort() override;
 
 };
@@ -54,10 +59,11 @@ class BubbleSort : public SortObject
 {
     Q_OBJECT
 public:
-    explicit BubbleSort(BaseCanva* canva,QObject *parent = nullptr):
-        SortObject(4,canva)
+    explicit BubbleSort(std::vector<int>* sampIn,QObject *parent = nullptr):
+        SortObject(4,sampIn)
     {}
 
+public slots:
     void sort() override;
 
 };
@@ -69,10 +75,11 @@ class QuickSort : public SortObject
 {
     Q_OBJECT
 public:
-    explicit QuickSort(BaseCanva* canva,QObject *parent = nullptr):
-        SortObject(5,canva)
+    explicit QuickSort(std::vector<int>* sampIn,QObject *parent = nullptr):
+        SortObject(5,sampIn)
     {}
 
+public slots:
     void sort() override;
 
 };
@@ -84,10 +91,11 @@ class SimpleSelectSort : public SortObject
 {
     Q_OBJECT
 public:
-    explicit SimpleSelectSort(BaseCanva* canva,QObject *parent = nullptr):
-        SortObject(6,canva)
+    explicit SimpleSelectSort(std::vector<int>* sampIn,QObject *parent = nullptr):
+        SortObject(6,sampIn)
     {}
 
+public slots:
     void sort() override;
 
 };
@@ -98,10 +106,11 @@ class HeapSort : public SortObject
 {
     Q_OBJECT
 public:
-    explicit HeapSort(BaseCanva* canva,QObject *parent = nullptr):
-        SortObject(7,canva)
+    explicit HeapSort(std::vector<int>* sampIn,QObject *parent = nullptr):
+        SortObject(7,sampIn)
     {}
 
+public slots:
     void sort() override;
 
 };
@@ -112,10 +121,11 @@ class TreeSelectSort : public SortObject
 {
     Q_OBJECT
 public:
-    explicit TreeSelectSort(BaseCanva* canva,QObject *parent = nullptr):
-        SortObject(8,canva)
+    explicit TreeSelectSort(std::vector<int>* sampIn,QObject *parent = nullptr):
+        SortObject(8,sampIn)
     {}
 
+public slots:
     void sort() override;
 
 };
@@ -127,10 +137,11 @@ class MergeSort : public SortObject
 {
     Q_OBJECT
 public:
-    explicit MergeSort(BaseCanva* canva,QObject *parent = nullptr):
-        SortObject(9,canva)
+    explicit MergeSort(std::vector<int>* sampIn,QObject *parent = nullptr):
+        SortObject(9,sampIn)
     {}
 
+public slots:
     void sort() override;
 
 };
@@ -142,10 +153,11 @@ class RadixSort : public SortObject
 {
     Q_OBJECT
 public:
-    explicit RadixSort(BaseCanva* canva,QObject *parent = nullptr):
-        SortObject(10,canva)
+    explicit RadixSort(std::vector<int>* sampIn,QObject *parent = nullptr):
+        SortObject(10,sampIn)
     {}
 
+public slots:
     void sort() override;
 
 };

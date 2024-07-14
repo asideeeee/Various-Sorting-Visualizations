@@ -11,6 +11,7 @@ SetCase::SetCase(int sortType,QWidget* prev,QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::setCase)
     , previous(prev)
+    , sortType(sortType)
 {
     ui->setupUi(this);
     switch(sortType)
@@ -139,13 +140,14 @@ void SetCase::on_startSort_released()
         return;
     }
     //样本选择界面下开始排序展示的按钮
-    SortDisplay* sortDisplay = new SortDisplay(previous);
+    SortObject *sortObj = creatSortObject(sortType,&sample);
+    SortDisplay* sortDisplay = new SortDisplay(previous,&sample,sortObj);
     sortDisplay->setAttribute(Qt::WA_DeleteOnClose);
-    SortObject *sortObj = creatSortObject(sortType,sortDisplay->getCanva());
+
     this->hide();
     sortDisplay->show();
-    sortDisplay->getCanva()->setSortParameter(sortObj,&sample);
-    sortDisplay->getCanva()->initializeRect();
+
+    //保证展示界面关闭时该界面删除
     connect(sortDisplay,&SortDisplay::displayWindowClosed,this,&SetCase::close);
 
     return;
@@ -185,7 +187,7 @@ void SetCase::on_sequentialBtn_released()
     for(int i=0;i<cap;i++){
         sample[i]=i+1;
     }
-    //std::random_shuffle(sample.begin(),sample.end());
+    std::random_shuffle(sample.begin(),sample.end());
 
     QString msg2 = QString("<已启用序列化样本.当前容量为 %1>").arg(QString::number(cap));
     ui->sampModeDisp->setText(msg2);
@@ -194,18 +196,18 @@ void SetCase::on_sequentialBtn_released()
 
 
 //创建排序算法对象的辅助函数,用于连接展示界面与不同的排序算法
-SortObject* creatSortObject(int type,BaseCanva* canva){
+SortObject* creatSortObject(int type,std::vector<int>* sampIn){
     switch (type) {
-    case 1: return new SimpleSelectSort(canva);
-    case 2: return new HalfInsertSort(canva);
-    case 3: return new ShellSort(canva);
-    case 4: return new BubbleSort(canva);
-    case 5: return new QuickSort(canva);
-    case 6: return new SimpleSelectSort(canva);
-    case 7: return new HeapSort(canva);
-    case 8: return new TreeSelectSort(canva);
-    case 9: return new MergeSort(canva);
-    case 10: return new RadixSort(canva);
+    case 1: return new SimpleInsertSort(sampIn);
+    case 2: return new HalfInsertSort(sampIn);
+    case 3: return new ShellSort(sampIn);
+    case 4: return new BubbleSort(sampIn);
+    case 5: return new QuickSort(sampIn);
+    case 6: return new SimpleSelectSort(sampIn);
+    case 7: return new HeapSort(sampIn);
+    case 8: return new TreeSelectSort(sampIn);
+    case 9: return new MergeSort(sampIn);
+    case 10: return new RadixSort(sampIn);
     default: return nullptr;
     }
 }

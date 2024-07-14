@@ -1,12 +1,29 @@
 #include "allsort.h"
 
 ///////////////
-//直接选择排序类,编号1
+//直接插入排序类,编号1
 void SimpleInsertSort::sort()
 {
+    pause();
 
+    InsertSort(*sample,sample->size());
+
+    emit completeSignal();
 }
 
+void SimpleInsertSort::InsertSort(std::vector<int>& R,int n) 	//直接插入排序
+{
+    for (int i = 1; i < n; ++i) {
+        int j = i;
+        while (j > 0 && R[j] < R[j - 1]) {
+            //comparing(j,j-1);
+            //swapping(j,j-1);
+            std::swap(R[j], R[j - 1]);
+            --j;
+        }
+    }
+    emit completeSignal();
+}
 
 ///////////////
 //折半插入排序类,编号2

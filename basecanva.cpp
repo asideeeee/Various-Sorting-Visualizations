@@ -66,18 +66,10 @@ void BaseCanva::repaintRect()
 }
 
 
-//画布接收数据函数
-void BaseCanva::setSortParameter(SortObject *in,std::vector<int>* sampleIn)
-{
-    sortObj=in;
-    sample=sampleIn;
-    return;
-}
-
-
 //交换函数,会自动进行颜色标记
 void BaseCanva::animatedSwap(int i,int j)
 {
+    sortObj->mutex.lock();
     int duration = interval;
     swapping1 = i;
     swapping2 = j;
@@ -112,12 +104,15 @@ void BaseCanva::animatedSwap(int i,int j)
 //比较函数,效果上相当于返回sample[i]<sample[j].在编写排序算法时,进行样本间比较请使用该函数.
 void BaseCanva::animatedCmp(int i, int j)
 {
+    sortObj->mutex.lock();
     allRect[lastI]->setBrush(Qt::white);
     allRect[lastJ]->setBrush(Qt::white);
     lastI=i;
     lastJ=j;
     allRect[i]->setBrush(QColor(0x33ccff));
     allRect[j]->setBrush(QColor(0x33ccff));
+    sortObj->mutex.unlock();
+    sortObj->condition.wakeAll();
     return;
 }
 
@@ -125,10 +120,14 @@ void BaseCanva::animatedCmp(int i, int j)
 //在排序完成后请调用该函数,将已经排序完成的样本标成绿色.
 void BaseCanva::completeMark()
 {
+    sortObj->mutex.lock();
     SortCompleteThread* temp = new SortCompleteThread(cap,&allRect);
     connect(temp, &QThread::finished, temp, &QThread::deleteLater);
     connect(temp,&SortCompleteThread::updateRequest,this,[=]{
         viewport()->update();
+    });
+    connect(temp,&QThread::finished,this,[=](){
+        sortObj->condition.wakeAll();
     });
     temp->start();
     return;
@@ -141,6 +140,8 @@ void BaseCanva::cancelSwapMark()
     allRect[swapping1]->setBrush(Qt::white);
     allRect[swapping2]->setBrush(Qt::white);
     swapping1 = swapping2 = 0;
+    sortObj->mutex.unlock();
+    sortObj->condition.wakeAll();
     return;
 }
 
@@ -171,51 +172,40 @@ void SortCompleteThread::run()
 
 //////////////////////////
 /// \brief SortObject类
-void SortObject::swap(int &i, int &j)
+void SortObject::swapping(int i, int j)
 {
-    std::swap(i,j);
+    QMutexLocker locker(&mutex);
     emit swapSignal(i,j);
+    condition.wait(&mutex);
     pause();
     return;
 }
+
 
 void SortObject::comparing(int i, int j)
 {
+    mutex.lock();
     emit cmpSignal(i,j);
+    condition.wait(&mutex);
     pause();
     return;
 }
 
+
 void SortObject::pause()
 {
-
+    //根据当前排序状态决定是否让线程锁定
+    while(singleStepMode){
+        QMutexLocker locker(&mutex);
+        condition.wait(&mutex);
+    }
+    qDebug()<<"第二暂停阶段结束";
+    return;
 }
 
 
-SortObject::SortObject(int type,BaseCanva* canva,QObject *parent)
+SortObject::SortObject(int type,std::vector<int>* sampIn,QObject *parent)
     : QObject{parent}
+    , sample(sampIn)
     , type(type)
-    , canva(canva)
-{
-    connect(this,&SortObject::swapSignal,canva,&BaseCanva::animatedSwap);
-    connect(this,&SortObject::cmpSignal,canva,&BaseCanva::animatedCmp);
-    sample=canva->sample;
-}
-
-void SortObject::setPause()
-{
-    singleStepMode = true;
-    return;
-}
-
-void SortObject::startSort()
-{
-    singleStepMode = false;
-    return;
-}
-
-void SortObject::nextStep()
-{
-    nextStepRequest = true;
-    return;
-}
+{}

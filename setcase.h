@@ -37,7 +37,7 @@ private:
     void setRandSample();
 };
 
-SortObject* creatSortObject(int type,BaseCanva* canva);
+SortObject* creatSortObject(int type,std::vector<int>* sampIn);
 
 #define MAX_CAPACITY 300
 
