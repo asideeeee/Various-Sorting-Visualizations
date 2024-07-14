@@ -1,9 +1,7 @@
 #ifndef SORTDISPLAY_H
 #define SORTDISPLAY_H
 
-#include <QWidget>
 #include "basecanva.h"
-#include <QLabel>
 
 /////////////
 ///
@@ -24,11 +22,7 @@ public:
     Ui::SortDisplay* getSortDisplayUi();
 
 private slots:
-    void on_startButton_released();
-
     void on_exitButton_released();
-
-    void on_pauseButton_released();
 
     void on_nextButton_released();
 

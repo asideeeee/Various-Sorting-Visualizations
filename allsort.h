@@ -1,7 +1,6 @@
 #ifndef ALLSORT_H
 #define ALLSORT_H
 
-#include "sortobject.h"
 #include "basecanva.h"
 
 ///////////////
@@ -14,13 +13,8 @@ public:
         SortObject(1,canva)
     {}
 
-    void sort(int count,int interval) override;
+    void sort() override;
 
-
-
-    //该类的parentCanva成员即画布.请通过parent访问所需要的数据
-signals:
-private:
 };
 
 
@@ -34,12 +28,8 @@ public:
         SortObject(2,canva)
     {}
 
-    void sort(int count,int interval) override;
+    void sort() override;
 
-
-
-signals:
-private:
 };
 
 
@@ -53,12 +43,8 @@ public:
         SortObject(3,canva)
     {}
 
-    void sort(int count,int interval) override;
+    void sort() override;
 
-
-
-signals:
-private:
 };
 
 
@@ -72,12 +58,8 @@ public:
         SortObject(4,canva)
     {}
 
-    void sort(int count,int interval) override;
+    void sort() override;
 
-
-
-signals:
-private:
 };
 
 
@@ -91,12 +73,8 @@ public:
         SortObject(5,canva)
     {}
 
-    void sort(int count,int interval) override;
+    void sort() override;
 
-
-
-signals:
-private:
 };
 
 
@@ -110,12 +88,7 @@ public:
         SortObject(6,canva)
     {}
 
-    void sort(int count,int interval) override;
-
-
-
-signals:
-private:
+    void sort() override;
 
 };
 
@@ -129,12 +102,7 @@ public:
         SortObject(7,canva)
     {}
 
-    void sort(int count,int interval) override;
-
-
-
-signals:
-private:
+    void sort() override;
 
 };
 
@@ -148,13 +116,7 @@ public:
         SortObject(8,canva)
     {}
 
-    void sort(int count,int interval) override;
-
-
-
-signals:
-
-private:
+    void sort() override;
 
 };
 
@@ -169,13 +131,8 @@ public:
         SortObject(9,canva)
     {}
 
-    void sort(int count,int interval) override;
+    void sort() override;
 
-
-
-signals:
-private:
-    BaseCanva* parentCanva;
 };
 
 
@@ -189,13 +146,7 @@ public:
         SortObject(10,canva)
     {}
 
-    void sort(int count,int interval) override;
-
-
-
-signals:
-
-private:
+    void sort() override;
 
 };
 

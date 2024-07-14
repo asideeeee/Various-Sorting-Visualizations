@@ -1,9 +1,8 @@
 #ifndef SETCASE_H
 #define SETCASE_H
 
-#include <QWidget>
 #include <qmessagebox.h>
-#include "sortobject.h"
+#include "basecanva.h"
 
 //此窗口的逻辑编写已完成
 
@@ -38,7 +37,7 @@ private:
     void setRandSample();
 };
 
-SortObject* creatSortObject(int type,QObject* parent);
+SortObject* creatSortObject(int type,BaseCanva* canva);
 
 #define MAX_CAPACITY 300
 

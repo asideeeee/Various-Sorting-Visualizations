@@ -13,6 +13,8 @@ SortDisplay::SortDisplay(QWidget* prev,QWidget *parent)
     ui->baseCanva->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->baseCanva->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->speedSpinBox->setValue(60);
+    connect(this->ui->pauseButton,&QPushButton::released,this->ui->baseCanva->sortObj,&SortObject::setPause);
+    connect(this->ui->startButton,&QPushButton::released,this->ui->baseCanva->sortObj,&SortObject::startSort);
 }
 
 SortDisplay::~SortDisplay()
@@ -31,13 +33,6 @@ Ui::SortDisplay *SortDisplay::getSortDisplayUi()
 }
 
 
-
-void SortDisplay::on_startButton_released()
-{
-
-}
-
-
 //退出展示页面函数
 void SortDisplay::on_exitButton_released()
 {
@@ -45,12 +40,6 @@ void SortDisplay::on_exitButton_released()
     emit displayWindowClosed();
     this->close();
     return;
-}
-
-
-void SortDisplay::on_pauseButton_released()
-{
-
 }
 
 

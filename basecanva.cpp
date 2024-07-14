@@ -1,5 +1,4 @@
 #include "basecanva.h"
-#include <QDebug>
 
 BaseCanva::BaseCanva(QWidget *parent)
     : QGraphicsView{parent}
@@ -10,6 +9,7 @@ BaseCanva::BaseCanva(QWidget *parent)
     scene->setSceneRect(this->rect());
     this->show();
 }
+
 
 //绘制最初状态下的样本
 void BaseCanva::initializeRect()
@@ -22,22 +22,22 @@ void BaseCanva::initializeRect()
     cap = sample->size();
     maxVal = *std::max_element(sample->begin(),sample->end());
     minVal = *std::min_element(sample->begin(),sample->end());
-    maxDifference = maxVal-minVal;
+    maxDifference = maxVal-minVal+1;
 
     //以下是计算获得的每个长方体的大小参数
-    const int averageWidth=width/cap;
-    const int heightWeight=(height-topSpace)/maxDifference;
+    const double averageWidth=width/(double)cap;
+    const double heightWeight=(height-topSpace)/(double)maxDifference;
 
     for(int i=0;i<sample->size();i++){
-        int tempHeight=heightWeight*sample->at(i);
+        double tempHeight=heightWeight*sample->at(i);
         // 这里的 (0, 0) 是相对于矩形项自身坐标系的位置
         RectItem* temp = new RectItem(0, 0, averageWidth, tempHeight);
         temp->setBrush(Qt::white);
 
         // 这里的 setPos 设置的是矩形在场景中的位置
-        temp->setPos(leftSpace + averageWidth * i, height - bottomSpace - tempHeight);
         allRect.push_back(temp);
         scene->addItem(temp);
+        temp->setPos(leftSpace + averageWidth * i, height - bottomSpace - tempHeight);
     }
 
     return;
@@ -52,11 +52,11 @@ void BaseCanva::repaintRect()
     const int height=this->height();
 
     //以下是计算获得的每个长方体的大小参数
-    const int averageWidth=width/cap;
-    const int heightWeight=(height-topSpace)/maxDifference;
+    const double averageWidth=width/(double)cap;
+    const double heightWeight=(height-topSpace)/(double)maxDifference;
 
     for(int i=0;i<cap;i++){
-        int tempHeight=heightWeight*sample->at(i);
+        double tempHeight=heightWeight*sample->at(i);
 
         // 这里的 setPos 设置的是矩形在场景中的位置
         allRect[i]->setRect(0, 0, averageWidth, tempHeight);
@@ -155,8 +155,9 @@ void BaseCanva::resizeEvent(QResizeEvent *event)
     return;
 }
 
-
-//辅助线程的函数
+////////////////////////
+/// SortCompleteThread类
+//辅助线程的函数,不要动它
 void SortCompleteThread::run()
 {
     for(int i=0;i<cap;i++){
@@ -164,5 +165,57 @@ void SortCompleteThread::run()
         QThread::msleep(1);
         emit updateRequest();
     }
+    return;
+}
+
+
+//////////////////////////
+/// \brief SortObject类
+void SortObject::swap(int &i, int &j)
+{
+    std::swap(i,j);
+    emit swapSignal(i,j);
+    pause();
+    return;
+}
+
+void SortObject::comparing(int i, int j)
+{
+    emit cmpSignal(i,j);
+    pause();
+    return;
+}
+
+void SortObject::pause()
+{
+
+}
+
+
+SortObject::SortObject(int type,BaseCanva* canva,QObject *parent)
+    : QObject{parent}
+    , type(type)
+    , canva(canva)
+{
+    connect(this,&SortObject::swapSignal,canva,&BaseCanva::animatedSwap);
+    connect(this,&SortObject::cmpSignal,canva,&BaseCanva::animatedCmp);
+    sample=canva->sample;
+}
+
+void SortObject::setPause()
+{
+    singleStepMode = true;
+    return;
+}
+
+void SortObject::startSort()
+{
+    singleStepMode = false;
+    return;
+}
+
+void SortObject::nextStep()
+{
+    nextStepRequest = true;
     return;
 }

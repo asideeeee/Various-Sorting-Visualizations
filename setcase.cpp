@@ -194,18 +194,18 @@ void SetCase::on_sequentialBtn_released()
 
 
 //创建排序算法对象的辅助函数,用于连接展示界面与不同的排序算法
-SortObject* creatSortObject(int type,QObject* parent){
+SortObject* creatSortObject(int type,BaseCanva* canva){
     switch (type) {
-    case 1: return new SimpleSelectSort(parent);
-    case 2: return new HalfInsertSort(parent);
-    case 3: return new ShellSort(parent);
-    case 4: return new BubbleSort(parent);
-    case 5: return new QuickSort(parent);
-    case 6: return new SimpleSelectSort(parent);
-    case 7: return new HeapSort(parent);
-    case 8: return new TreeSelectSort(parent);
-    case 9: return new MergeSort(parent);
-    case 10: return new RadixSort(parent);
+    case 1: return new SimpleSelectSort(canva);
+    case 2: return new HalfInsertSort(canva);
+    case 3: return new ShellSort(canva);
+    case 4: return new BubbleSort(canva);
+    case 5: return new QuickSort(canva);
+    case 6: return new SimpleSelectSort(canva);
+    case 7: return new HeapSort(canva);
+    case 8: return new TreeSelectSort(canva);
+    case 9: return new MergeSort(canva);
+    case 10: return new RadixSort(canva);
     default: return nullptr;
     }
 }
