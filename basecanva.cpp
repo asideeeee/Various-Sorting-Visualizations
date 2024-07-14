@@ -183,7 +183,9 @@ void SortObject::comparing(int i, int j)
 
 void SortObject::pause()
 {
-
+    while(singleStepMode){
+        condition.wait(&mutex);
+    }
 }
 
 

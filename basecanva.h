@@ -46,6 +46,10 @@ public:
     //如果为false,则表明当前处于连续执行状态.等待用户按下"暂停排序"或排序完成信号.
     bool singleStepMode = true;
 
+
+    QMutex mutex;
+    QWaitCondition condition;
+
 public slots:
     //排序算法函数.这一函数应该放有排序算法的核心逻辑.
     //其中的每次进行交换的时候,请不要使用std::swap,直接使用本类中本地的swap函数即可
@@ -135,6 +139,7 @@ public:
 
     //操作间间隔
     int interval = 40;
+
 };
 
 
