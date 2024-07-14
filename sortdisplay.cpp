@@ -37,8 +37,10 @@ SortDisplay::SortDisplay(QWidget* prev,std::vector<int>* sampIn,SortObject* sort
     connect(sortObjIn, &SortObject::completeSignal, &sortThread, &QThread::quit);
     connect(&sortThread, &QThread::finished, &sortThread, &QThread::deleteLater);
 
+    //将线程的启动信号和对应的排序对象管辖的排序函数逻辑相连
     connect(&sortThread,&QThread::started,sortObjIn,&SortObject::sort);
 
+    //启动后台线程,后台线程此时将会进入排序函数的逻辑中
     sortThread.start();
 }
 
@@ -77,7 +79,7 @@ void SortDisplay::on_withdrawButton_released()
 //动画速度设置
 void SortDisplay::on_speedSpinBox_valueChanged(int arg1)
 {
-    ui->baseCanva->interval=arg1-20;
+    ui->baseCanva->interval=arg1;
     ui->baseCanva->sortObj->interval=arg1;
     return;
 }
@@ -95,7 +97,6 @@ void SortDisplay::on_debugButton_released()
 
 void SortDisplay::on_nextButton_released()
 {
-    ui->baseCanva->sortObj->condition.wakeAll();
     return;
 }
 
@@ -110,7 +111,7 @@ void SortDisplay::on_pauseButton_released()
 void SortDisplay::on_startButton_released()
 {
     ui->baseCanva->sortObj->singleStepMode = false;
-    ui->baseCanva->sortObj->condition.wakeAll();
+
     return;
 }
 

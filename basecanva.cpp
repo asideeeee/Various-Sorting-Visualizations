@@ -69,7 +69,6 @@ void BaseCanva::repaintRect()
 //交换函数,会自动进行颜色标记
 void BaseCanva::animatedSwap(int i,int j)
 {
-    sortObj->mutex.lock();
     int duration = interval;
     swapping1 = i;
     swapping2 = j;
@@ -81,18 +80,21 @@ void BaseCanva::animatedSwap(int i,int j)
     QPointF pos1 = start->pos();
     QPointF pos2 = destination->pos();
 
+    //动画1
     QPropertyAnimation *anime1=new QPropertyAnimation(start,"pos");
     anime1->setDuration(duration);
     anime1->setStartValue(pos1);
     anime1->setEndValue(QPointF(pos2.x(),pos1.y()));
     anime1->start(QAbstractAnimation::DeleteWhenStopped);
 
+    //动画2
     QPropertyAnimation *anime2=new QPropertyAnimation(destination,"pos");
     anime2->setDuration(duration);
     anime2->setStartValue(pos2);
     anime2->setEndValue(QPointF(pos1.x(),pos2.y()));
     anime2->start(QAbstractAnimation::DeleteWhenStopped);
 
+    //启动两个动画.该函数启动时不阻塞,移动动画自动执行
     anime1->start();
     anime2->start();
     connect(anime2,&QPropertyAnimation::finished,this,&BaseCanva::cancelSwapMark);
@@ -104,15 +106,12 @@ void BaseCanva::animatedSwap(int i,int j)
 //比较函数,效果上相当于返回sample[i]<sample[j].在编写排序算法时,进行样本间比较请使用该函数.
 void BaseCanva::animatedCmp(int i, int j)
 {
-    sortObj->mutex.lock();
     allRect[lastI]->setBrush(Qt::white);
     allRect[lastJ]->setBrush(Qt::white);
     lastI=i;
     lastJ=j;
     allRect[i]->setBrush(QColor(0x33ccff));
     allRect[j]->setBrush(QColor(0x33ccff));
-    sortObj->mutex.unlock();
-    sortObj->condition.wakeAll();
     return;
 }
 
@@ -120,14 +119,10 @@ void BaseCanva::animatedCmp(int i, int j)
 //在排序完成后请调用该函数,将已经排序完成的样本标成绿色.
 void BaseCanva::completeMark()
 {
-    sortObj->mutex.lock();
     SortCompleteThread* temp = new SortCompleteThread(cap,&allRect);
     connect(temp, &QThread::finished, temp, &QThread::deleteLater);
     connect(temp,&SortCompleteThread::updateRequest,this,[=]{
         viewport()->update();
-    });
-    connect(temp,&QThread::finished,this,[=](){
-        sortObj->condition.wakeAll();
     });
     temp->start();
     return;
@@ -140,8 +135,6 @@ void BaseCanva::cancelSwapMark()
     allRect[swapping1]->setBrush(Qt::white);
     allRect[swapping2]->setBrush(Qt::white);
     swapping1 = swapping2 = 0;
-    sortObj->mutex.unlock();
-    sortObj->condition.wakeAll();
     return;
 }
 
@@ -174,9 +167,7 @@ void SortCompleteThread::run()
 /// \brief SortObject类
 void SortObject::swapping(int i, int j)
 {
-    QMutexLocker locker(&mutex);
     emit swapSignal(i,j);
-    condition.wait(&mutex);
     pause();
     return;
 }
@@ -184,9 +175,7 @@ void SortObject::swapping(int i, int j)
 
 void SortObject::comparing(int i, int j)
 {
-    mutex.lock();
     emit cmpSignal(i,j);
-    condition.wait(&mutex);
     pause();
     return;
 }
@@ -194,13 +183,9 @@ void SortObject::comparing(int i, int j)
 
 void SortObject::pause()
 {
-    //根据当前排序状态决定是否让线程锁定
     while(singleStepMode){
-        QMutexLocker locker(&mutex);
         condition.wait(&mutex);
     }
-    qDebug()<<"第二暂停阶段结束";
-    return;
 }
 
 

@@ -46,14 +46,14 @@ public:
     //如果为false,则表明当前处于连续执行状态.等待用户按下"暂停排序"或排序完成信号.
     bool singleStepMode = true;
 
+
     QMutex mutex;
     QWaitCondition condition;
 
 public slots:
     //排序算法函数.这一函数应该放有排序算法的核心逻辑.
     //其中的每次进行交换的时候,请不要使用std::swap,直接使用本类中本地的swap函数即可
-    //每次进行比较"之前",请手动emit cmpSignal,并传入当前正在比较的两个索引
-    //各位在编写时不需要考虑线程问题.上级的SortDisplay窗口会将该函数分配到一个单独的线程.
+    //每次进行比较"之前",请手动emit cmpSignal,并传入当前正在比较的两个索引.
     virtual void sort() = 0;
 
 signals:
@@ -139,6 +139,7 @@ public:
 
     //操作间间隔
     int interval = 40;
+
 };
 
 
