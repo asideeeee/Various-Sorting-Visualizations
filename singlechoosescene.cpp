@@ -2,84 +2,91 @@
 #include"setcase.h"
 #include "ui_singlechoosescene.h"
 
+//此窗口的逻辑编写已完成
 
-singleChooseScene::singleChooseScene(int wigetMultiplier,QWidget *parent)
+singleChooseScene::singleChooseScene(QWidget* prev,QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::singleChooseScene)
+    , previous(prev)
 {
-    setFixedSize(320*wigetMultiplier,180*wigetMultiplier);
     ui->setupUi(this);
     //给每个排序选择按钮安排信号槽，跳转到相应的页面
     connect(ui->sortButton1,&QPushButton::clicked,this,[=](){
-        setCase* setcase=new setCase(1,wigetMultiplier);
+        SetCase* setcase=new SetCase(1,this);
         setcase->setAttribute(Qt::WA_DeleteOnClose);
         this->hide();
         setcase->show();
     });
     connect(ui->sortButton2,&QPushButton::clicked,this,[=](){
-        setCase* setcase=new setCase(2,wigetMultiplier);
+        SetCase* setcase=new SetCase(2,this);
         setcase->setAttribute(Qt::WA_DeleteOnClose);
         this->hide();
         setcase->show();
     });
     connect(ui->sortButton3,&QPushButton::clicked,this,[=](){
-        setCase* setcase=new setCase(3,wigetMultiplier);
+        SetCase* setcase=new SetCase(3,this);
         setcase->setAttribute(Qt::WA_DeleteOnClose);
         this->hide();
         setcase->show();
     });
     connect(ui->sortButton4,&QPushButton::clicked,this,[=](){
-        setCase* setcase=new setCase(4,wigetMultiplier);
+        SetCase* setcase=new SetCase(4,this);
         setcase->setAttribute(Qt::WA_DeleteOnClose);
         this->hide();
         setcase->show();
     });
     connect(ui->sortButton5,&QPushButton::clicked,this,[=](){
-        setCase* setcase=new setCase(5,wigetMultiplier);
+        SetCase* setcase=new SetCase(5,this);
         setcase->setAttribute(Qt::WA_DeleteOnClose);
         this->hide();
         setcase->show();
     });
     connect(ui->sortButton6,&QPushButton::clicked,this,[=](){
-        setCase* setcase=new setCase(6,wigetMultiplier);
+        SetCase* setcase=new SetCase(6,this);
         setcase->setAttribute(Qt::WA_DeleteOnClose);
         this->hide();
         setcase->show();
     });
     connect(ui->sortButton7,&QPushButton::clicked,this,[=](){
-        setCase* setcase=new setCase(7,wigetMultiplier);
+        SetCase* setcase=new SetCase(7,this);
         setcase->setAttribute(Qt::WA_DeleteOnClose);
         this->hide();
         setcase->show();
     });
     connect(ui->sortButton8,&QPushButton::clicked,this,[=](){
-        setCase* setcase=new setCase(8,wigetMultiplier);
+        SetCase* setcase=new SetCase(8,this);
         setcase->setAttribute(Qt::WA_DeleteOnClose);
         this->hide();
         setcase->show();
     });
     connect(ui->sortButton9,&QPushButton::clicked,this,[=](){
-        setCase* setcase=new setCase(9,wigetMultiplier);
+        SetCase* setcase=new SetCase(9,this);
         setcase->setAttribute(Qt::WA_DeleteOnClose);
         this->hide();
         setcase->show();
     });
     connect(ui->sortButton10,&QPushButton::clicked,this,[=](){
-        setCase* setcase=new setCase(10,wigetMultiplier);
+        SetCase* setcase=new SetCase(10,this);
         setcase->setAttribute(Qt::WA_DeleteOnClose);
         this->hide();
         setcase->show();
-
     });
     connect(ui->sortButton11, &QPushButton::clicked, this, [=]() {
         sortingScene = new treedata();
         this->hide();
         sortingScene->show();
         });
-  
+    this->resize(1280,720);
 }
 
 singleChooseScene::~singleChooseScene()
 {
     delete ui;
 }
+
+void singleChooseScene::on_backToMainBtn_released()
+{
+    previous->show();
+    this->close();
+}
+

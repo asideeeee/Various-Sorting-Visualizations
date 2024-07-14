@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Widget</class>
+ <widget class="QWidget" name="Widget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>881</width>
+    <height>737</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Widget</string>
+  </property>
+  <widget class="QWidget" name="Hwidget_first" native="true">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>571</width>
+     <height>281</height>
+    </rect>
+   </property>
+   <widget class="QWidget" name="horizontalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>561</width>
+      <height>281</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="hLayout_first"/>
+   </widget>
+  </widget>
+  <widget class="QWidget" name="Hwidget_second" native="true">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>310</y>
+     <width>571</width>
+     <height>281</height>
+    </rect>
+   </property>
+   <widget class="QWidget" name="horizontalLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>561</width>
+      <height>281</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="hLayout_second"/>
+   </widget>
+  </widget>
+  <widget class="QComboBox" name="cBox_num">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>640</y>
+     <width>83</width>
+     <height>25</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="cBox_secondAlgo">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>310</y>
+     <width>181</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="cBox_firstAlo">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>10</y>
+     <width>181</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QWidget" name="widget_btnGroup" native="true">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>620</y>
+     <width>411</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_3">
+    <item>
+     <widget class="QPushButton" name="btn_new">
+      <property name="text">
+       <string>生成数据</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="btn_showData">
+      <property name="text">
+       <string>显示数据</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="btn_sort">
+      <property name="text">
+       <string>开始排序</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QLabel" name="first_time">
+   <property name="geometry">
+    <rect>
+     <x>670</x>
+     <y>70</y>
+     <width>111</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="first_swap">
+   <property name="geometry">
+    <rect>
+     <x>670</x>
+     <y>130</y>
+     <width>111</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="first_cmp">
+   <property name="geometry">
+    <rect>
+     <x>670</x>
+     <y>200</y>
+     <width>101</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="second_time">
+   <property name="geometry">
+    <rect>
+     <x>670</x>
+     <y>380</y>
+     <width>121</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="second_swap">
+   <property name="geometry">
+    <rect>
+     <x>670</x>
+     <y>440</y>
+     <width>121</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="second_cmp">
+   <property name="geometry">
+    <rect>
+     <x>670</x>
+     <y>520</y>
+     <width>111</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="cBox_sortSpeed">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>640</y>
+     <width>83</width>
+     <height>25</height>
+    </rect>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

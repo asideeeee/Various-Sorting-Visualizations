@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SortDisplay</class>
+ <widget class="QWidget" name="SortDisplay">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1159</width>
+    <height>667</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>排序可视化界面</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout" stretch="100,1">
+   <item>
+    <layout class="QVBoxLayout" name="canvaBox">
+     <item>
+      <widget class="BaseCanva" name="baseCanva"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="displayPortVLayout" stretch="1,6,6,6">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetDefaultConstraint</enum>
+     </property>
+     <item>
+      <layout class="QVBoxLayout" name="typeInfoVLayout">
+       <item>
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;排序类型&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="sortTypeLabel">
+         <property name="font">
+          <font>
+           <pointsize>15</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="displayVLayout">
+       <item>
+        <layout class="QHBoxLayout" name="progressHLayout">
+         <item>
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;排序进度&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLCDNumber" name="progressLCD">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>15</pointsize>
+            </font>
+           </property>
+           <property name="digitCount">
+            <number>6</number>
+           </property>
+           <property name="segmentStyle">
+            <enum>QLCDNumber::Flat</enum>
+           </property>
+           <property name="value" stdset="0">
+            <double>0.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;(%)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="swapTimesHLayout">
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;交换次数&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLCDNumber" name="swapTimeLCD">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>15</pointsize>
+            </font>
+           </property>
+           <property name="digitCount">
+            <number>6</number>
+           </property>
+           <property name="segmentStyle">
+            <enum>QLCDNumber::Flat</enum>
+           </property>
+           <property name="value" stdset="0">
+            <double>0.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;(次)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="timeCostHLayout">
+         <item>
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;花费时间&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLCDNumber" name="timeCostLCD">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>15</pointsize>
+            </font>
+           </property>
+           <property name="digitCount">
+            <number>6</number>
+           </property>
+           <property name="segmentStyle">
+            <enum>QLCDNumber::Flat</enum>
+           </property>
+           <property name="value" stdset="0">
+            <double>0.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;(s)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="cmpTimesHLayout">
+         <item>
+          <widget class="QLabel" name="label_7">
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;比较次数&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLCDNumber" name="cmpTimesLCD">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>15</pointsize>
+            </font>
+           </property>
+           <property name="digitCount">
+            <number>6</number>
+           </property>
+           <property name="segmentStyle">
+            <enum>QLCDNumber::Flat</enum>
+           </property>
+           <property name="value" stdset="0">
+            <double>0.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_8">
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;(次)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="buttonVLayout" stretch="0,0,0,0,0,0,0,0">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetDefaultConstraint</enum>
+       </property>
+       <item>
+        <widget class="QLabel" name="label_10">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>15</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>动画速度</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="speedHLayout" stretch="4,1">
+         <item>
+          <widget class="QSpinBox" name="speedSpinBox">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_11">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>(ms)</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QPushButton" name="debugButton">
+         <property name="font">
+          <font>
+           <pointsize>15</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>函数测试按钮</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="withdrawButton">
+         <property name="font">
+          <font>
+           <pointsize>15</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>回退一步</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="nextButton">
+         <property name="font">
+          <font>
+           <pointsize>15</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>前进一步</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pauseButton">
+         <property name="font">
+          <font>
+           <pointsize>15</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>暂停排序</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="startButton">
+         <property name="font">
+          <font>
+           <pointsize>15</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>开始排序</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="exitButton">
+         <property name="font">
+          <font>
+           <pointsize>15</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>退出展示</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BaseCanva</class>
+   <extends>QGraphicsView</extends>
+   <header location="global">basecanva.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
