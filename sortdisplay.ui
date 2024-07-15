@@ -284,6 +284,9 @@
              <pointsize>12</pointsize>
             </font>
            </property>
+           <property name="maximum">
+            <number>10000</number>
+           </property>
           </widget>
          </item>
          <item>

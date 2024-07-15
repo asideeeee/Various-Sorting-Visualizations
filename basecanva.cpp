@@ -7,6 +7,7 @@ BaseCanva::BaseCanva(QWidget *parent)
     scene = new QGraphicsScene(this);
     this->setScene(scene);
     scene->setSceneRect(this->rect());
+    this->setBackgroundBrush(Qt::darkGray);
     this->show();
 }
 
@@ -69,6 +70,7 @@ void BaseCanva::repaintRect()
 //交换函数,会自动进行颜色标记
 void BaseCanva::animatedSwap(int i,int j)
 {
+    qDebug()<<"swap slot receive"<<i<<j;
     int duration = interval;
     swapping1 = i;
     swapping2 = j;
@@ -97,8 +99,13 @@ void BaseCanva::animatedSwap(int i,int j)
     //启动两个动画.该函数启动时不阻塞,移动动画自动执行
     anime1->start();
     anime2->start();
-    connect(anime2,&QPropertyAnimation::finished,this,&BaseCanva::cancelSwapMark);
-
+    connect(anime2,&QPropertyAnimation::finished,this,[=](){
+        allRect[swapping1]->setBrush(Qt::white);
+        allRect[swapping2]->setBrush(Qt::white);
+        std::swap(allRect[swapping1],allRect[swapping2]);
+        swapping1 = swapping2 = 0;
+        sortObj->tryNextStepSort();
+    });
     return;
 }
 
@@ -106,35 +113,30 @@ void BaseCanva::animatedSwap(int i,int j)
 //比较函数,效果上相当于返回sample[i]<sample[j].在编写排序算法时,进行样本间比较请使用该函数.
 void BaseCanva::animatedCmp(int i, int j)
 {
+    qDebug()<<"comp slot receive"<<i<<j;
     allRect[lastI]->setBrush(Qt::white);
     allRect[lastJ]->setBrush(Qt::white);
     lastI=i;
     lastJ=j;
     allRect[i]->setBrush(QColor(0x33ccff));
     allRect[j]->setBrush(QColor(0x33ccff));
+    QEventLoop loop;
+    QTimer::singleShot(interval, &loop, &QEventLoop::quit);
+    loop.exec();
+    sortObj->tryNextStepSort();
     return;
 }
 
 
-//在排序完成后请调用该函数,将已经排序完成的样本标成绿色.
+//在排序完成后调用该函数,将已经排序完成的样本标成绿色.
 void BaseCanva::completeMark()
 {
-    SortCompleteThread* temp = new SortCompleteThread(cap,&allRect);
-    connect(temp, &QThread::finished, temp, &QThread::deleteLater);
+    SortCompleteThread* temp = new SortCompleteThread(cap,&allRect,lastI,lastJ);
+    connect(temp, &QThread::finished, temp, &QObject::deleteLater);
     connect(temp,&SortCompleteThread::updateRequest,this,[=]{
         viewport()->update();
     });
     temp->start();
-    return;
-}
-
-
-//取消标记函数.会自动调用,不要手动调用.
-void BaseCanva::cancelSwapMark()
-{
-    allRect[swapping1]->setBrush(Qt::white);
-    allRect[swapping2]->setBrush(Qt::white);
-    swapping1 = swapping2 = 0;
     return;
 }
 
@@ -154,6 +156,8 @@ void BaseCanva::resizeEvent(QResizeEvent *event)
 //辅助线程的函数,不要动它
 void SortCompleteThread::run()
 {
+    arr->at(lastI)->setBrush(Qt::white);
+    arr->at(lastJ)->setBrush(Qt::white);
     for(int i=0;i<cap;i++){
         arr->at(i)->setBrush(Qt::green);
         QThread::msleep(1);
@@ -167,25 +171,72 @@ void SortCompleteThread::run()
 /// \brief SortObject类
 void SortObject::swapping(int i, int j)
 {
+    qDebug()<<"swap signal send:"<<i<<j;
     emit swapSignal(i,j);
     pause();
     return;
 }
 
 
-void SortObject::comparing(int i, int j)
+bool SortObject::comparing(int i, int j)
 {
+    qDebug()<<"comp signal send:"<<i<<j;
     emit cmpSignal(i,j);
     pause();
-    return;
+    return true;
 }
 
 
 void SortObject::pause()
 {
-    while(singleStepMode){
+    mutex.lock();
+    if(!interruptRequested)
         condition.wait(&mutex);
-    }
+    mutex.unlock();
+    return;
+}
+
+
+void SortObject::setSingleStepMode()
+{
+    mutex.lock();
+    singleStepMode = true;
+    mutex.unlock();
+    return;
+}
+
+
+void SortObject::tryNextStepSort()
+{
+    mutex.lock();
+    if(!singleStepMode)
+        condition.wakeAll();
+    mutex.unlock();
+    return;
+}
+
+void SortObject::interruptRequest()
+{
+    interruptRequested = true;
+    return;
+}
+
+
+void SortObject::resumeSort()
+{
+    mutex.lock();
+    singleStepMode = false;
+    condition.wakeAll();
+    mutex.unlock();
+    return;
+}
+
+void SortObject::forceNextStepSort()
+{
+    mutex.lock();
+    condition.wakeAll();
+    mutex.unlock();
+    return;
 }
 
 
@@ -194,3 +245,14 @@ SortObject::SortObject(int type,std::vector<int>* sampIn,QObject *parent)
     , sample(sampIn)
     , type(type)
 {}
+
+
+
+////////////////////////////////////////////////////
+/// \brief SortObject::testThreadId
+/// 测试用函数,发布前删除
+void SortObject::testThreadId()
+{
+    qDebug()<<"Sort Thread's id is"<<QThread::currentThreadId();
+    return;
+}

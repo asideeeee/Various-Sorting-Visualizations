@@ -17,24 +17,17 @@
 //前向声明
 class BaseCanva;
 
-//排序算法抽象基类.
+//排序算法抽象基类.将会被移动到子线程中执行
 class SortObject : public QObject
 {
     Q_OBJECT
 public:
     explicit SortObject(int type,std::vector<int>* sampIn,QObject *parent = nullptr);
 
-    //此数据记录了主线程设置的动画间隔值
-    int interval = 60;
-
     //请在每次进行交换之前调用如下函数
     void swapping(int i,int j);
     //请在每次进行比较之前调用如下函数
-    void comparing(int i,int j);
-
-    //该函数会根据当前排序展示处于单步执行状态还是连续执行状态,然后自动决定是否进行时长为interval的暂停
-    //除了最初的暂停,不要手动调用
-    void pause();
+    bool comparing(int i,int j);
 
     //请通过该指针,使用at()函数访问样本数据.
     std::vector<int>* sample;
@@ -45,24 +38,30 @@ public:
     //指示排序状态.如果该值为true,则表明展示当前处于单步执行状态,等待用户按下"下一步"或"开始排序"
     //如果为false,则表明当前处于连续执行状态.等待用户按下"暂停排序"或排序完成信号.
     bool singleStepMode = true;
+    bool interruptRequested = false;
 
+    void testThreadId();
 
-    QMutex mutex;
-    QWaitCondition condition;
+    QMutex mutex;               //主线程锁
+    QWaitCondition condition;   //条件锁定器
 
 public slots:
     //排序算法函数.这一函数应该放有排序算法的核心逻辑.
     //其中的每次进行交换的时候,请不要使用std::swap,直接使用本类中本地的swap函数即可
     //每次进行比较"之前",请手动emit cmpSignal,并传入当前正在比较的两个索引.
     virtual void sort() = 0;
+    void resumeSort();
+    void forceNextStepSort();
+    void pause();
+    void setSingleStepMode();
+    void tryNextStepSort();
+    void interruptRequest();
 
 signals:
     void swapSignal(int i,int j);
     void cmpSignal(int i,int j);
     void completeSignal();
 
-    void startSortSignal();
-    void nextStepSignal();
 };
 
 
@@ -96,8 +95,6 @@ public:
 signals:
 
 public slots:
-    //取消交换时红色标记的函数.会自动调用,不要手动调用.
-    void cancelSwapMark();
     //交换函数,会自动进行颜色标记,不要手动调用
     void animatedSwap(int i, int j);
 
@@ -138,7 +135,7 @@ public:
     int lastJ = 0;
 
     //操作间间隔
-    int interval = 40;
+    int interval = 60;
 
 };
 
@@ -151,14 +148,18 @@ class SortCompleteThread:public QThread{
     Q_OBJECT
 
 public:
-    SortCompleteThread(int cap,std::vector<RectItem*>* arr,QObject* parent = nullptr):QThread(parent)
+    SortCompleteThread(int cap,std::vector<RectItem*>* arr,int lastI,int lastJ,QObject* parent = nullptr):QThread(parent)
         ,cap(cap)
         ,arr(arr)
+        ,lastI(lastI)
+        ,lastJ(lastJ)
     {}
 
 private:
     int cap;
     std::vector<RectItem*>* arr;
+    int lastI;
+    int lastJ;
 
 signals:
     void updateRequest();

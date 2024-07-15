@@ -44,7 +44,7 @@ signals:
 private:
     Ui::SortDisplay *ui;
     QWidget* previous;
-    QThread sortThread;
+    QThread* sortThread;
 };
 
 #endif // SORTDISPLAY_H

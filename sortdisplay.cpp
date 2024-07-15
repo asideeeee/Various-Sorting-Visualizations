@@ -7,10 +7,10 @@ SortDisplay::SortDisplay(QWidget* prev,std::vector<int>* sampIn,SortObject* sort
     : QWidget(parent)
     , ui(new Ui::SortDisplay)
     , previous(prev)
-    , sortThread()
 {
     ui->setupUi(this);
     resize(1920,1080);
+    sortThread = new QThread();
 
     //初始化画布数据
     ui->baseCanva->sample=sampIn;
@@ -29,23 +29,28 @@ SortDisplay::SortDisplay(QWidget* prev,std::vector<int>* sampIn,SortObject* sort
 
     //将排序逻辑转移至另外的线程,本GUI线程只负责动画
 
-    sortObjIn->moveToThread(&sortThread);
-    connect(ui->exitButton,&QPushButton::pressed,&sortThread,[=](){
-        sortThread.quit();
-        sortThread.deleteLater();
-    });
-    connect(sortObjIn, &SortObject::completeSignal, &sortThread, &QThread::quit);
-    connect(&sortThread, &QThread::finished, &sortThread, &QThread::deleteLater);
+    sortObjIn->moveToThread(sortThread);
+    connect(sortThread, &QThread::finished, sortThread, &QThread::deleteLater);
 
     //将线程的启动信号和对应的排序对象管辖的排序函数逻辑相连
-    connect(&sortThread,&QThread::started,sortObjIn,&SortObject::sort);
+    connect(sortThread,&QThread::started,sortObjIn,&SortObject::sort);
 
-    //启动后台线程,后台线程此时将会进入排序函数的逻辑中
-    sortThread.start();
+    //启动后台线程,后台线程此时将会进入排序函数的逻辑中,并在默认参数下立即暂停等待唤醒函数调用
+    sortThread->start();
+
+    //连接测试信号与线程调试信号
+    connect(this,&SortDisplay::testSig,ui->baseCanva->sortObj,&SortObject::testThreadId);
 }
 
 SortDisplay::~SortDisplay()
 {
+    if(sortThread)
+    {
+        ui->baseCanva->sortObj->interruptRequest();
+        sortThread->quit();
+        ui->baseCanva->sortObj->resumeSort();
+        sortThread->wait();
+    }
     delete ui;
 }
 
@@ -70,6 +75,7 @@ void SortDisplay::on_exitButton_released()
 }
 
 
+//要是时间不够难度太大就删掉这个功能吧
 void SortDisplay::on_withdrawButton_released()
 {
 
@@ -80,9 +86,30 @@ void SortDisplay::on_withdrawButton_released()
 void SortDisplay::on_speedSpinBox_valueChanged(int arg1)
 {
     ui->baseCanva->interval=arg1;
-    ui->baseCanva->sortObj->interval=arg1;
     return;
 }
+
+
+void SortDisplay::on_nextButton_released()
+{
+    ui->baseCanva->sortObj->forceNextStepSort();
+    return;
+}
+
+
+void SortDisplay::on_pauseButton_released()
+{
+    ui->baseCanva->sortObj->setSingleStepMode();
+    return;
+}
+
+
+void SortDisplay::on_startButton_released()
+{
+    ui->baseCanva->sortObj->resumeSort();
+    return;
+}
+
 
 /// \Attention
 //注意:以下槽函数仅仅在调试时有用
@@ -91,27 +118,13 @@ void SortDisplay::on_speedSpinBox_valueChanged(int arg1)
 /// \Attention
 void SortDisplay::on_debugButton_released()
 {
+    qDebug()<<"Main Thread's id is"<<QThread::currentThreadId();
+    qDebug()<<"sending signal.";
+    emit testSig();
+    qDebug()<<"directly executing slot";
+    ui->baseCanva->sortObj->testThreadId();
+    //ui->baseCanva->animatedSwap(0,1);
     return;
 }
 
-
-void SortDisplay::on_nextButton_released()
-{
-    return;
-}
-
-
-void SortDisplay::on_pauseButton_released()
-{
-    ui->baseCanva->sortObj->singleStepMode = true;
-    return;
-}
-
-
-void SortDisplay::on_startButton_released()
-{
-    ui->baseCanva->sortObj->singleStepMode = false;
-
-    return;
-}
 

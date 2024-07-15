@@ -5,17 +5,19 @@
 void SimpleInsertSort::sort()
 {
     pause();
-
+    if(interruptRequested)return;
     InsertSort(*sample,sample->size());
-
+    if(interruptRequested)return;
     emit completeSignal();
 }
 
 void SimpleInsertSort::InsertSort(std::vector<int>& R,int n) 	//直接插入排序
 {
     for (int i = 1; i < n; ++i) {
+        if(interruptRequested)return;
         int j = i;
-        while (j > 0 && R[j] < R[j - 1]) {
+        while (j > 0 && comparing(j,j-1) && R[j] < R[j - 1]) {
+            swapping(j,j-1);
             std::swap(R[j], R[j - 1]);
             --j;
         }
