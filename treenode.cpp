@@ -15,6 +15,12 @@ void treeNode::paintEvent(QPaintEvent *event)
     QPen pen(Qt::black,3);
     painter.setPen(pen);
     painter.setRenderHint(QPainter::Antialiasing);
+    if (highlighted) {
+        painter.setBrush(Qt::yellow);  // 设置高亮时的填充颜色
+    }
+    else {
+        painter.setBrush(Qt::white);   // 设置普通状态下的填充颜色
+    }
     painter.drawEllipse(QPoint(26,26),23,23);
 }
 
@@ -22,6 +28,11 @@ void treeNode::setVal(int value)
 {
     val=value;
     ui->valLabel->setText(QString::number(value));
+}
+
+int treeNode::getVal() const
+{
+    return val;
 }
 
 treeNode::~treeNode()

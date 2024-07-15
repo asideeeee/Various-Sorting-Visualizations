@@ -2,6 +2,8 @@
 #define SINGLECHOOSESCENE_H
 
 #include <QWidget>
+#include "heapsortvisualization.h"
+#include"treedata.h"
 
 namespace Ui {
 class singleChooseScene;
@@ -20,6 +22,7 @@ private slots:
 
 private:
     Ui::singleChooseScene *ui;
+    treedata* sortingScene;
     QWidget* previous;
 };
 

@@ -16,11 +16,17 @@ public:
     explicit treeNode(QWidget *parent = nullptr);
     void paintEvent(QPaintEvent *event);
     void setVal(int value);
+    int getVal() const;
+    void setHighlighted(bool highlight) {
+        highlighted = highlight;
+        update();
+    }
     ~treeNode();
 
 private:
     Ui::treeNode *ui;
     int val;
+    bool highlighted=false;
 };
 
 #endif // TREENODE_H
