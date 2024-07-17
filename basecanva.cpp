@@ -74,10 +74,10 @@ void BaseCanva::animatedSwap(int i,int j)
     int duration = interval;
     swapping1 = i;
     swapping2 = j;
-    if(!sortObj->withdrawing){
+    if(!withdrawing){
         //如果不是在撤回,记录已执行操作
-        executedIsSwap.push_back(true);
-        executedInfo.push_back(std::make_pair(i,j));
+        withdrawSortObj->executedIsSwap.push_back(true);
+        withdrawSortObj->executedInfo.push_back(std::make_pair(i,j));
     }
     RectItem *start = allRect[i];
     RectItem *destination = allRect[j];
@@ -105,10 +105,16 @@ void BaseCanva::animatedSwap(int i,int j)
     anime1->start();
     anime2->start();
     connect(anime2,&QPropertyAnimation::finished,this,[=](){
+        //动画结束后操作
         allRect[swapping1]->setBrush(Qt::white);
         allRect[swapping2]->setBrush(Qt::white);
         std::swap(allRect[swapping1],allRect[swapping2]);
-        sortObj->tryNextStepSort();
+        //对对应的线程发出执行下一步的请求
+        if(withdrawing){
+            withdrawSortObj->tryNextStepSort();
+        }else{
+            sortObj->tryNextStepSort();
+        }
     });
     return;
 }
@@ -122,17 +128,21 @@ void BaseCanva::animatedCmp(int i, int j)
     allRect[lastJ]->setBrush(Qt::white);
     lastI=i;
     lastJ=j;
-    if(!sortObj->withdrawing){
+    if(!withdrawing){
         //如果不是在撤回,记录操作
-        executedIsSwap.push_back(false);
-        executedInfo.push_back(std::make_pair(i,j));
+        withdrawSortObj->executedIsSwap.push_back(false);
+        withdrawSortObj->executedInfo.push_back(std::make_pair(i,j));
     }
     allRect[i]->setBrush(QColor(0x33ccff));
     allRect[j]->setBrush(QColor(0x33ccff));
     QEventLoop loop;
     QTimer::singleShot(interval, &loop, &QEventLoop::quit);
     loop.exec();
-    sortObj->tryNextStepSort();
+    if(withdrawing){
+        withdrawSortObj->tryNextStepSort();
+    }else{
+        sortObj->tryNextStepSort();
+    }
     return;
 }
 
@@ -223,6 +233,7 @@ void SortObject::setSingleStepMode()
 void SortObject::tryNextStepSort()
 {
     mutex.lock();
+
     if(!singleStepMode)
         condition.wakeAll();
     mutex.unlock();
@@ -265,8 +276,50 @@ SortObject::SortObject(int type,std::vector<int>* sampIn,QObject *parent)
 ////////////////////////////////////////////////////
 /// \brief SortObject::testThreadId
 /// 测试用函数,发布前删除
+/*
 void SortObject::testThreadId()
 {
     qDebug()<<"Sort Thread's id is"<<QThread::currentThreadId();
+    return;
+}
+*/
+
+void WithdrawSort::sort()
+{
+    isSorting = true;
+    pause();
+    while((!interruptRequested)&&(!withdrawedIsSwap.empty())){
+        if(withdrawedIsSwap.back()){
+            swapping(withdrawedInfo.back().first,withdrawedInfo.back().second);
+        }else{
+            comparing(withdrawedInfo.back().first,withdrawedInfo.back().second);
+        }
+        withdrawedInfo.pop_back();
+        withdrawedIsSwap.pop_back();
+    }
+    normal = withdrawedIsSwap.empty();
+    //如果处于连续排序状态,而且撤回列表已经清空,则发出正常信号激活正排序线程
+    if(normal&&!singleStepMode)
+        emit normalized();
+    interruptRequested = false;
+    isSorting = false;
+    return;
+}
+
+void WithdrawSort::withdraw()
+{
+    isWithdrawing = true;
+    while((!interruptRequested)&&(!executedIsSwap.empty())){
+        if(executedIsSwap.back()){
+            swapping(executedInfo.back().first,executedInfo.back().second);
+        }else{
+            comparing(executedInfo.back().first,executedInfo.back().second);
+        }
+        executedInfo.pop_back();
+        executedIsSwap.pop_back();
+    }
+    normal = withdrawedIsSwap.empty();
+    interruptRequested = false;
+    isWithdrawing = false;
     return;
 }

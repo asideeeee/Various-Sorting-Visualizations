@@ -28,9 +28,7 @@ private slots:
 
     void on_speedSpinBox_valueChanged(int arg1);
 
-    //发布前删除
-    void on_debugButton_released();
-    //发布前删除
+    void on_startWithdrawButton_released();
 
     void on_nextButton_released();
 
@@ -43,13 +41,15 @@ private slots:
 signals:
     void displayWindowClosed();
 
-    void testSig();
+    void beginWithdraw();
+    void beginWithdrawerSort();
+    //void testSig();
 
 private:
     Ui::SortDisplay *ui;
     QWidget* previous;
     QThread* sortThread;
-
+    QThread* withdrawThread;
 };
 
 #endif // SORTDISPLAY_H

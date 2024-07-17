@@ -174,7 +174,7 @@
          <item>
           <widget class="QLabel" name="label_3">
            <property name="text">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;(s)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;(ms)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
           </widget>
          </item>
@@ -285,7 +285,7 @@
             </font>
            </property>
            <property name="maximum">
-            <number>10000</number>
+            <number>1000</number>
            </property>
           </widget>
          </item>
@@ -307,14 +307,14 @@
         </layout>
        </item>
        <item>
-        <widget class="QPushButton" name="debugButton">
+        <widget class="QPushButton" name="startWithdrawButton">
          <property name="font">
           <font>
            <pointsize>15</pointsize>
           </font>
          </property>
          <property name="text">
-          <string>函数测试按钮</string>
+          <string>连续回退</string>
          </property>
         </widget>
        </item>

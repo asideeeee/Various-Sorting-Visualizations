@@ -11,10 +11,14 @@ SortDisplay::SortDisplay(QWidget* prev,std::vector<int>* sampIn,SortObject* sort
     ui->setupUi(this);
     resize(1920,1080);
     sortThread = new QThread();
+    withdrawThread = new QThread();
+    WithdrawSort* withdrawer = new WithdrawSort(sortObjIn->sample);
+
 
     //初始化画布数据
     ui->baseCanva->sample=sampIn;
     ui->baseCanva->sortObj=sortObjIn;
+    ui->baseCanva->withdrawSortObj=withdrawer;
     ui->baseCanva->initializeRect();
     ui->baseCanva->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->baseCanva->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -26,23 +30,31 @@ SortDisplay::SortDisplay(QWidget* prev,std::vector<int>* sampIn,SortObject* sort
     connect(sortObjIn,&SortObject::swapSignal,ui->baseCanva,&BaseCanva::animatedSwap);
     connect(sortObjIn,&SortObject::cmpSignal,ui->baseCanva,&BaseCanva::animatedCmp);
     connect(sortObjIn,&SortObject::completeSignal,ui->baseCanva,&BaseCanva::completeMark);
-    connect(ui->baseCanva,&BaseCanva::finished,this,[=](){
-        this->setMinimumSize(QSize(0, 0));
-        this->setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
-        ui->startButton->setDisabled(true);
-        ui->pauseButton->setDisabled(true);
-    });
+    connect(ui->baseCanva,&BaseCanva::finished,this,&SortDisplay::disableAllBtn);
+
+    connect(withdrawer,&SortObject::swapSignal,ui->baseCanva,&BaseCanva::animatedSwap);
+    connect(withdrawer,&SortObject::cmpSignal,ui->baseCanva,&BaseCanva::animatedCmp);
 
     //将排序逻辑转移至另外的线程,本GUI线程只负责动画
 
+    withdrawer->moveToThread(withdrawThread);
     sortObjIn->moveToThread(sortThread);
     connect(sortThread, &QThread::finished, sortThread, &QThread::deleteLater);
 
     //将线程的启动信号和对应的排序对象管辖的排序函数逻辑相连
     connect(sortThread,&QThread::started,sortObjIn,&SortObject::sort);
+    connect(this,&SortDisplay::beginWithdraw, withdrawer,&WithdrawSort::withdraw);
+    connect(this,&SortDisplay::beginWithdrawerSort, withdrawer,&WithdrawSort::sort);
+
+    //将撤回线程的正常化信号(即撤回列表清空信号)连接到排序线程的开始排序信号
+    connect(withdrawer, &WithdrawSort::normalized,ui->baseCanva,[=](){
+        ui->baseCanva->withdrawing = false;
+        ui->baseCanva->sortObj->resumeSort();
+    });
 
     //启动后台线程,后台线程此时将会进入排序函数的逻辑中,并在默认参数下立即暂停等待唤醒函数调用
     sortThread->start();
+    withdrawThread->start();
 
     switch(sortObjIn->type){
     case 1:ui->sortTypeLabel->setText("直接插入排序");
@@ -65,10 +77,12 @@ SortDisplay::SortDisplay(QWidget* prev,std::vector<int>* sampIn,SortObject* sort
         break;
     case 10:ui->sortTypeLabel->setText("基数排序");
         break;
+    default:
+        break;
     }
 
     //连接测试信号与线程调试信号
-    connect(this,&SortDisplay::testSig,ui->baseCanva->sortObj,&SortObject::testThreadId);
+    //connect(this,&SortDisplay::testSig,ui->baseCanva->sortObj,&SortObject::testThreadId);
 }
 
 SortDisplay::~SortDisplay()
@@ -109,32 +123,41 @@ void SortDisplay::on_exitButton_released()
 //要是时间不够难度太大就删掉这个功能吧
 void SortDisplay::on_withdrawButton_released()
 {
-    if(ui->baseCanva->executedIsSwap.empty())return;
-
     this->setFixedSize(this->size());
+
     ui->speedSpinBox->setDisabled(true);
-    ui->nextButton->setDisabled(true);
+    ui->startWithdrawButton->setDisabled(true);
     ui->withdrawButton->setDisabled(true);
+    ui->nextButton->setDisabled(true);
+    ui->pauseButton->setDisabled(true);
     ui->startButton->setDisabled(true);
 
-    bool isSwap = ui->baseCanva->executedIsSwap.back();
-    ui->baseCanva->executedIsSwap.pop_back();
-    std::pair<int,int> info = ui->baseCanva->executedInfo.back();
-    ui->baseCanva->executedInfo.pop_back();
-    if(isSwap){
-        ui->baseCanva->withdrawedIsSwap.push_back(true);
+    //主功能开始
 
-    } else {
-        ui->baseCanva->withdrawedIsSwap.push_back(false);
+    //如果当前撤回线程处于排序函数内部,中断当前撤回线程的排序函数
+    if(ui->baseCanva->withdrawSortObj->isSorting){
+        ui->baseCanva->withdrawSortObj->interruptRequest();
+        ui->baseCanva->withdrawSortObj->forceNextStepSort();
     }
-    ui->baseCanva->withdrawedInfo.push_back(info);
+    //如果线程还未进入撤回函数,先通过信号在撤回线程内启动函数
+    if(!ui->baseCanva->withdrawSortObj->isWithdrawing){
+        ui->baseCanva->withdrawing = true;
+        emit beginWithdraw();
+    }
+    //此时撤回线程已经位于撤回函数内部,强制下步
+    ui->baseCanva->withdrawSortObj->forceNextStepSort();
+    //主功能结束
 
     ui->speedSpinBox->setDisabled(false);
-    ui->nextButton->setDisabled(false);
+    ui->startWithdrawButton->setDisabled(false);
     ui->withdrawButton->setDisabled(false);
+    ui->nextButton->setDisabled(false);
+    ui->pauseButton->setDisabled(true);
     ui->startButton->setDisabled(false);
+
     this->setMinimumSize(QSize(0, 0));
     this->setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
+
     return;
 }
 
@@ -150,33 +173,53 @@ void SortDisplay::on_speedSpinBox_valueChanged(int arg1)
 void SortDisplay::on_nextButton_released()
 {
     this->setFixedSize(this->size());
+
     ui->speedSpinBox->setDisabled(true);
-    ui->nextButton->setDisabled(true);
+    ui->startWithdrawButton->setDisabled(true);
     ui->withdrawButton->setDisabled(true);
+    ui->nextButton->setDisabled(true);
+    ui->pauseButton->setDisabled(true);
     ui->startButton->setDisabled(true);
 
-    ui->baseCanva->sortObj->forceNextStepSort();
+    //根据画布表明当前主操作权是否在撤回线程,进行相应的强制下步操作
+    if(ui->baseCanva->withdrawing){
+        ui->baseCanva->withdrawSortObj->forceNextStepSort();
+    }else{
+        ui->baseCanva->sortObj->forceNextStepSort();
+    }
 
     ui->speedSpinBox->setDisabled(false);
-    ui->nextButton->setDisabled(false);
+    ui->startWithdrawButton->setDisabled(false);
     ui->withdrawButton->setDisabled(false);
+    ui->nextButton->setDisabled(false);
     ui->startButton->setDisabled(false);
+
     this->setMinimumSize(QSize(0, 0));
     this->setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
+
     return;
 }
 
 
 void SortDisplay::on_pauseButton_released()
 {
-    ui->baseCanva->sortObj->setSingleStepMode();
+    //根据画布表明是否正在撤回,决定将哪个线程设为单步模式
+    if(ui->baseCanva->withdrawing){
+        ui->baseCanva->withdrawSortObj->setSingleStepMode();
+    }else{
+        ui->baseCanva->sortObj->setSingleStepMode();
+    }
+
     this->setMinimumSize(QSize(0, 0));
     this->setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
+
     ui->speedSpinBox->setDisabled(false);
-    ui->nextButton->setDisabled(false);
+    ui->startWithdrawButton->setDisabled(false);
     ui->withdrawButton->setDisabled(false);
-    ui->startButton->setDisabled(false);
+    ui->nextButton->setDisabled(false);
     ui->pauseButton->setDisabled(true);
+    ui->startButton->setDisabled(false);
+
     return;
 }
 
@@ -185,25 +228,45 @@ void SortDisplay::on_startButton_released()
 {
     //排序期间禁止使用的窗口操作
     this->setFixedSize(this->size());
-    ui->pauseButton->setDisabled(false);
-    ui->nextButton->setDisabled(true);
-    ui->withdrawButton->setDisabled(true);
-    ui->startButton->setDisabled(true);
+
     ui->speedSpinBox->setDisabled(true);
+    ui->startWithdrawButton->setDisabled(true);
+    ui->withdrawButton->setDisabled(true);
+    ui->nextButton->setDisabled(true);
+    ui->pauseButton->setDisabled(false);
+    ui->startButton->setDisabled(true);
+
+    ui->pauseButton->setText("暂停排序");
     //排序启动
-    ui->baseCanva->sortObj->resumeSort();
+    //如果画布表明正在撤回,则启动撤回线程的排序函数
+    if(ui->baseCanva->withdrawing){
+        //中断任何当前函数
+        ui->baseCanva->withdrawSortObj->interruptRequest();
+        ui->baseCanva->withdrawSortObj->forceNextStepSort();
+        //通过信号在排序线程内启动其排序函数
+        emit beginWithdrawerSort();
+        ui->baseCanva->withdrawSortObj->resumeSort();
+    }else{
+        //否则,直接启动主排序线程的排序函数即可
+        ui->baseCanva->sortObj->resumeSort();
+    }
+
     return;
 }
 
+
+//禁用所有按钮
 void SortDisplay::disableAllBtn()
 {
     ui->speedSpinBox->setDisabled(true);
-    ui->nextButton->setDisabled(true);
+    ui->startWithdrawButton->setDisabled(true);
     ui->withdrawButton->setDisabled(true);
-    ui->startButton->setDisabled(true);
+    ui->nextButton->setDisabled(true);
     ui->pauseButton->setDisabled(true);
+    ui->startButton->setDisabled(true);
     this->setMinimumSize(QSize(0, 0));
     this->setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
+
     return;
 }
 
@@ -213,14 +276,34 @@ void SortDisplay::disableAllBtn()
 //用于测试一些函数能否正常运行
 //正式打包发布前请删除该函数及其对应按钮
 /// \Attention
-void SortDisplay::on_debugButton_released()
+void SortDisplay::on_startWithdrawButton_released()
 {
-    qDebug()<<"Main Thread's id is"<<QThread::currentThreadId();
-    qDebug()<<"sending signal.";
-    emit testSig();
-    qDebug()<<"directly executing slot";
-    ui->baseCanva->sortObj->testThreadId();
-    //ui->baseCanva->animatedSwap(0,1);
+    //连续撤回期间禁止使用的窗口操作
+    this->setFixedSize(this->size());
+
+    ui->speedSpinBox->setDisabled(true);
+    ui->startWithdrawButton->setDisabled(true);
+    ui->withdrawButton->setDisabled(true);
+    ui->nextButton->setDisabled(true);
+    ui->pauseButton->setDisabled(false);
+    ui->startButton->setDisabled(true);
+
+    ui->pauseButton->setText("暂停撤回");
+    //连续撤回启动
+    //中断当前撤回线程的排序函数
+    if(ui->baseCanva->withdrawSortObj->isSorting){
+        ui->baseCanva->withdrawSortObj->interruptRequest();
+        ui->baseCanva->withdrawSortObj->forceNextStepSort();
+    }
+    //如果线程还未进入撤回函数,先通过信号在撤回线程内启动函数
+    if(!ui->baseCanva->withdrawSortObj->isWithdrawing){
+        ui->baseCanva->withdrawing = true;
+        emit beginWithdraw();
+    }
+    //此时线程必然正在撤回函数内的暂停位点
+    //随后启动连续撤回函数,脱离暂停
+    ui->baseCanva->withdrawSortObj->resumeSort();
+
     return;
 }
 

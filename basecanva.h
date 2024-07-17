@@ -16,6 +16,7 @@
 
 //前向声明
 class BaseCanva;
+class WithdrawSort;
 
 //排序算法抽象基类.将会被移动到子线程中执行
 class SortObject : public QObject
@@ -38,10 +39,9 @@ public:
     //指示排序状态.如果该值为true,则表明展示当前处于单步执行状态,等待用户按下"下一步"或"开始排序"
     //如果为false,则表明当前处于连续执行状态.等待用户按下"暂停排序"或排序完成信号.
     bool singleStepMode = true;
-    bool withdrawing = false;
     bool interruptRequested = false;
 
-    void testThreadId();
+    //void testThreadId();
 
     QMutex mutex;               //主线程锁
     QWaitCondition condition;   //条件锁定器
@@ -116,6 +116,8 @@ public:
     std::vector<int>* sample;
     std::vector<RectItem*> allRect;
     QGraphicsScene *scene;
+    WithdrawSort *withdrawSortObj;
+    bool withdrawing = false;
 
     //样本参数记录
     int cap = 0;
@@ -143,15 +145,6 @@ public:
     //记录排序统计数据
     int cmpCount = 0;
     int swapCount = 0;
-
-    //记录被撤回的操作类型,1代表交换,0代表比较
-    std::vector<bool> executedIsSwap;
-    //记录被操作的两个元素对应的索引
-    //特别说明:此处的索引指的是被操作后索引,反向交换操作需要将其还原为操作前状态.
-    std::vector<std::pair<int,int>> executedInfo;
-
-    std::vector<bool> withdrawedIsSwap;
-    std::vector<std::pair<int,int>> withdrawedInfo;
 };
 
 
@@ -182,6 +175,41 @@ signals:
 protected:
     void run() override;
 };
+
+
+//////////////
+// 撤回后重排序类,编号0
+//为了防止占用GUI线程和主排序线程,新建一个专为撤回准备的线程
+class WithdrawSort : public SortObject
+{
+    Q_OBJECT
+public:
+    explicit WithdrawSort(std::vector<int>* sampIn,QObject *parent = nullptr):
+        SortObject(0,sampIn)
+    {}
+
+public slots:
+    void sort() override;
+    void withdraw();
+
+signals:
+    void normalized();
+
+public:
+    //记录当前处于有撤回状态还是无撤回状态
+    bool normal = true;
+    bool isSorting = false;
+    bool isWithdrawing = false;
+    //记录被撤回的操作类型,1代表交换,0代表比较
+    std::vector<bool> executedIsSwap;
+    //记录被操作的两个元素对应的索引
+    //特别说明:此处的索引指的是被操作后索引,反向交换操作需要将其还原为操作前状态.
+    std::vector<std::pair<int,int>> executedInfo;
+
+    std::vector<bool> withdrawedIsSwap;
+    std::vector<std::pair<int,int>> withdrawedInfo;
+};
+
 
 #endif // BASECANVA_H
 
