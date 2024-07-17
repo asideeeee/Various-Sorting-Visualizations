@@ -32,8 +32,10 @@ public slots:
 
 
 public:
-    explicit heapSortVisualization(QWidget *parent = nullptr);
+    explicit heapSortVisualization(QWidget* previous = nullptr,QWidget *parent = nullptr);
     ~heapSortVisualization();
+    //该数据成员用于返回至主界面
+    QWidget* prev;
 
 private:
     Ui::heapSortVisualization *ui;

@@ -18,7 +18,7 @@ void SimpleInsertSort::InsertSort(std::vector<int>& R,int n) 	//直接插入排�
         int j = i;
         while (j > 0 && comparing(j,j-1) && R[j] < R[j - 1]) {
             swapping(j,j-1);
-            std::swap(R[j], R[j - 1]);
+            //std::swap(R[j], R[j - 1]);
             --j;
         }
     }

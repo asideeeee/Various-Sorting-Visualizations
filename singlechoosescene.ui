@@ -588,7 +588,7 @@
      </item>
      <item>
       <widget class="QWidget" name="widget_4" native="true">
-       <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="3,1,3,0,0">
+       <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="2,1,2,1,2">
         <item>
          <spacer name="horizontalSpacer_14">
           <property name="orientation">
@@ -646,11 +646,23 @@
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="sortButton10_2">
+         <widget class="QPushButton" name="sortButton11">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="minimumSize">
            <size>
             <width>100</width>
             <height>50</height>
+           </size>
+          </property>
+          <property name="sizeIncrement">
+           <size>
+            <width>2</width>
+            <height>1</height>
            </size>
           </property>
           <property name="font">

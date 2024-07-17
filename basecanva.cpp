@@ -74,6 +74,11 @@ void BaseCanva::animatedSwap(int i,int j)
     int duration = interval;
     swapping1 = i;
     swapping2 = j;
+    if(!sortObj->withdrawing){
+        //如果不是在撤回,记录已执行操作
+        executedIsSwap.push_back(true);
+        executedInfo.push_back(std::make_pair(i,j));
+    }
     RectItem *start = allRect[i];
     RectItem *destination = allRect[j];
     start->setBrush(Qt::red);
@@ -103,7 +108,6 @@ void BaseCanva::animatedSwap(int i,int j)
         allRect[swapping1]->setBrush(Qt::white);
         allRect[swapping2]->setBrush(Qt::white);
         std::swap(allRect[swapping1],allRect[swapping2]);
-        swapping1 = swapping2 = 0;
         sortObj->tryNextStepSort();
     });
     return;
@@ -118,6 +122,11 @@ void BaseCanva::animatedCmp(int i, int j)
     allRect[lastJ]->setBrush(Qt::white);
     lastI=i;
     lastJ=j;
+    if(!sortObj->withdrawing){
+        //如果不是在撤回,记录操作
+        executedIsSwap.push_back(false);
+        executedInfo.push_back(std::make_pair(i,j));
+    }
     allRect[i]->setBrush(QColor(0x33ccff));
     allRect[j]->setBrush(QColor(0x33ccff));
     QEventLoop loop;
@@ -135,6 +144,9 @@ void BaseCanva::completeMark()
     connect(temp, &QThread::finished, temp, &QObject::deleteLater);
     connect(temp,&SortCompleteThread::updateRequest,this,[=]{
         viewport()->update();
+    });
+    connect(temp,&SortCompleteThread::finished,this,[=]{
+        emit finished();
     });
     temp->start();
     return;
@@ -158,6 +170,7 @@ void SortCompleteThread::run()
 {
     arr->at(lastI)->setBrush(Qt::white);
     arr->at(lastJ)->setBrush(Qt::white);
+
     for(int i=0;i<cap;i++){
         arr->at(i)->setBrush(Qt::green);
         QThread::msleep(1);
@@ -173,6 +186,7 @@ void SortObject::swapping(int i, int j)
 {
     qDebug()<<"swap signal send:"<<i<<j;
     emit swapSignal(i,j);
+    std::swap((*sample)[i],(*sample)[j]);
     pause();
     return;
 }

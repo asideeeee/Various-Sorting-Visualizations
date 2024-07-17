@@ -11,7 +11,7 @@
 #include <algorithm>
 #include <random>
 
-heapSortVisualization::heapSortVisualization(QWidget* parent)
+heapSortVisualization::heapSortVisualization(QWidget* previous,QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::heapSortVisualization)
 {
@@ -28,7 +28,7 @@ heapSortVisualization::heapSortVisualization(QWidget* parent)
         start();
         });
     connect(ui->pushButton3, &QPushButton::clicked, this, [=]() {
-        chooseScene = new singleChooseScene(wigetMultiplier, nullptr);
+        chooseScene = new singleChooseScene(previous, nullptr);
         chooseScene->setAttribute(Qt::WA_DeleteOnClose);
         this->hide();
         chooseScene->show();

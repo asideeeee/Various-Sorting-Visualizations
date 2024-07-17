@@ -19,7 +19,7 @@ public:
     ~SortDisplay();
 
     BaseCanva* getCanva();
-    Ui::SortDisplay* getSortDisplayUi();
+    void setResizable();
 
 private slots:
     void on_exitButton_released();
@@ -28,13 +28,17 @@ private slots:
 
     void on_speedSpinBox_valueChanged(int arg1);
 
+    //发布前删除
     void on_debugButton_released();
+    //发布前删除
 
     void on_nextButton_released();
 
     void on_pauseButton_released();
 
     void on_startButton_released();
+
+    void disableAllBtn();
 
 signals:
     void displayWindowClosed();
@@ -45,6 +49,7 @@ private:
     Ui::SortDisplay *ui;
     QWidget* previous;
     QThread* sortThread;
+
 };
 
 #endif // SORTDISPLAY_H

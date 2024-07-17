@@ -38,6 +38,7 @@ public:
     //指示排序状态.如果该值为true,则表明展示当前处于单步执行状态,等待用户按下"下一步"或"开始排序"
     //如果为false,则表明当前处于连续执行状态.等待用户按下"暂停排序"或排序完成信号.
     bool singleStepMode = true;
+    bool withdrawing = false;
     bool interruptRequested = false;
 
     void testThreadId();
@@ -62,6 +63,7 @@ signals:
     void cmpSignal(int i,int j);
     void completeSignal();
 
+    void executeWithdrawedAct();
 };
 
 
@@ -93,6 +95,7 @@ public:
     void repaintRect();
 
 signals:
+    void finished();
 
 public slots:
     //交换函数,会自动进行颜色标记,不要手动调用
@@ -137,6 +140,18 @@ public:
     //操作间间隔
     int interval = 60;
 
+    //记录排序统计数据
+    int cmpCount = 0;
+    int swapCount = 0;
+
+    //记录被撤回的操作类型,1代表交换,0代表比较
+    std::vector<bool> executedIsSwap;
+    //记录被操作的两个元素对应的索引
+    //特别说明:此处的索引指的是被操作后索引,反向交换操作需要将其还原为操作前状态.
+    std::vector<std::pair<int,int>> executedInfo;
+
+    std::vector<bool> withdrawedIsSwap;
+    std::vector<std::pair<int,int>> withdrawedInfo;
 };
 
 

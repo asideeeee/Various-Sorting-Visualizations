@@ -28,6 +28,7 @@ void treeNode::setVal(int value)
 {
     val=value;
     ui->valLabel->setText(QString::number(value));
+    ui->valLabel->setStyleSheet("color:black;");
 }
 
 int treeNode::getVal() const
