@@ -1,13 +1,13 @@
 #include "treedata.h"
 #include "ui_treedata.h"
-#include"ui_heapsortvisualization.h"
 
-treedata::treedata(QWidget *parent)
+treedata::treedata(QWidget *prev, QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::treedata)
+    , prev(prev)
 {
     ui->setupUi(this);
-;
+    this->setAttribute(Qt::WA_DeleteOnClose);
     // 连接按钮点击信号与槽函数
     connect(ui->randomButton, &QPushButton::clicked, this, &treedata::handleRandomSampleSize);
     connect(ui->selfButton, &QPushButton::clicked, this, &treedata::handleInputData);
@@ -39,7 +39,7 @@ void treedata::handleInputData()
             inputDataVector.push_back(str.toInt());
         }
 
-        sortingScene = new heapSortVisualization();
+        sortingScene = new heapSortVisualization(this,prev);
         this->hide();
         sortingScene->show();
         sortingScene->initialize(inputDataVector);
@@ -51,7 +51,7 @@ void treedata::handleRandomSampleSize()
     bool ok;
     int sampleSize = ui->lineedit1->text().toInt(&ok);  // 获取 lineedit 中的值
     if (ok && sampleSize <= 15) {                       //输入的值小于等于15时，才触发函数
-        sortingScene = new heapSortVisualization();
+        sortingScene = new heapSortVisualization(this,prev);
         this->hide();
         sortingScene->show();
         sortingScene->startSortingAnimation(sampleSize);  // 将样本大小传递给 startSortingAnimation 函数       

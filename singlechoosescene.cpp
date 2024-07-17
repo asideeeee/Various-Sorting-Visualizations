@@ -72,7 +72,7 @@ singleChooseScene::singleChooseScene(QWidget* prev,QWidget *parent)
         setcase->show();
     });
     connect(ui->sortButton11, &QPushButton::clicked, this, [=]() {
-        sortingScene = new treedata();
+        sortingScene = new treedata(this);
         this->hide();
         sortingScene->show();
         });

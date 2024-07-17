@@ -18,12 +18,12 @@ public slots:
     void handleRandomSampleSize();
 
 public:
-    explicit treedata(QWidget* parent = nullptr);
+    explicit treedata(QWidget* prev,QWidget* parent = nullptr);
     std::vector<int> inputDataVector;  // 新增的成员变量用于存储输入的数据
     ~treedata();
 private:
     Ui::treedata *ui;
     heapSortVisualization* sortingScene;
-    
+    QWidget* prev;
 };
 #endif // TREEDATA_H

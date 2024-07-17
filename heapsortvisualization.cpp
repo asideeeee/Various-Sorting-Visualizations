@@ -1,6 +1,5 @@
 #include "heapsortvisualization.h"
 #include "ui_heapsortvisualization.h"
-#include"singlechoosescene.h"
 #include<memory.h>
 #include"QLabel"
 #include<qpainter.h>
@@ -11,10 +10,13 @@
 #include <algorithm>
 #include <random>
 
-heapSortVisualization::heapSortVisualization(QWidget* previous,QWidget* parent)
+heapSortVisualization::heapSortVisualization(QWidget* previous,QWidget* chooseScene,QWidget* parent)
     : QWidget(parent)
+    , prev(previous)
+    , chooseScene(chooseScene)
     , ui(new Ui::heapSortVisualization)
 {
+    this->setAttribute(Qt::WA_DeleteOnClose);
     ui->setupUi(this);
     nodes = findChildren<treeNode*>();
     nodesState.resize(15, true); // 初始化nodesState
@@ -28,10 +30,9 @@ heapSortVisualization::heapSortVisualization(QWidget* previous,QWidget* parent)
         start();
         });
     connect(ui->pushButton3, &QPushButton::clicked, this, [=]() {
-        chooseScene = new singleChooseScene(previous, nullptr);
-        chooseScene->setAttribute(Qt::WA_DeleteOnClose);
-        this->hide();
         chooseScene->show();
+        prev->close();
+        this->close();
         });
 }
 

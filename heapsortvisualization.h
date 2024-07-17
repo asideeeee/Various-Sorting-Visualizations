@@ -32,10 +32,10 @@ public slots:
 
 
 public:
-    explicit heapSortVisualization(QWidget* previous = nullptr,QWidget *parent = nullptr);
+    explicit heapSortVisualization(QWidget* previous = nullptr, QWidget *chooseScene = nullptr, QWidget *parent = nullptr);
     ~heapSortVisualization();
-    //该数据成员用于返回至主界面
-    QWidget* prev;
+    //该数据成员用于关闭样本选择窗口以免泄露内存
+    QWidget* prev,chooseScene;
 
 private:
     Ui::heapSortVisualization *ui;
@@ -45,7 +45,6 @@ private:
     QListView* listView; // 数组栏
     QStringListModel* listModel; // 数组栏的数据模型
     std::vector<int> randomData; // 存储生成的随机向量
-    QWidget* chooseScene = nullptr;//跳转初始界面
     int wigetMultiplier = 3;
 
 protected:

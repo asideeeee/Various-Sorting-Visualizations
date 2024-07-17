@@ -70,6 +70,8 @@ void BaseCanva::repaintRect()
 //交换函数,会自动进行颜色标记
 void BaseCanva::animatedSwap(int i,int j)
 {
+    allRect[lastI]->setBrush(Qt::white);
+    allRect[lastJ]->setBrush(Qt::white);
     qDebug()<<"swap slot receive"<<i<<j;
     int duration = interval;
     swapping1 = i;
@@ -183,7 +185,8 @@ void SortCompleteThread::run()
 
     for(int i=0;i<cap;i++){
         arr->at(i)->setBrush(Qt::green);
-        QThread::msleep(1);
+        QThread::usleep(1);
+        //QThread::msleep(1);
         emit updateRequest();
     }
     return;
@@ -194,9 +197,10 @@ void SortCompleteThread::run()
 /// \brief SortObject类
 void SortObject::swapping(int i, int j)
 {
+    if(i==j)return;
     qDebug()<<"swap signal send:"<<i<<j;
     emit swapSignal(i,j);
-    std::swap((*sample)[i],(*sample)[j]);
+    std::swap(sample->at(i),sample->at(j));
     pause();
     return;
 }
