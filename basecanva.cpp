@@ -197,7 +197,6 @@ void BaseCanva::completeMark()
 {
     SortCompleteThread* temp = new SortCompleteThread(cap,&allRect,lastI,lastJ);
     completeThread = temp;
-    connect(temp, &QThread::finished, temp, &QObject::deleteLater);
     connect(temp,&SortCompleteThread::updateRequest,this,[=]{
         viewport()->update();
     });
