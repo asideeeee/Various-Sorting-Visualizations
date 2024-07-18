@@ -24,7 +24,7 @@ SortDisplay::SortDisplay(QWidget* prev,std::vector<int>* sampIn,SortObject* sort
     ui->baseCanva->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     //初始化动画速度
-    ui->speedSpinBox->setValue(60);
+    ui->speedSpinBox->setValue(1);
 
     //连接排序算法与动画函数
     connect(sortObjIn,&SortObject::swapSignal,ui->baseCanva,&BaseCanva::animatedSwap);
@@ -81,6 +81,9 @@ SortDisplay::SortDisplay(QWidget* prev,std::vector<int>* sampIn,SortObject* sort
         break;
     }
 
+    ui->startWithdrawButton->setDisabled(true);
+    ui->pauseButton->setDisabled(true);
+    ui->withdrawButton->setDisabled(true);
     //连接测试信号与线程调试信号
     //connect(this,&SortDisplay::testSig,ui->baseCanva->sortObj,&SortObject::testThreadId);
 }
@@ -271,11 +274,6 @@ void SortDisplay::disableAllBtn()
 }
 
 
-/// \Attention
-//注意:以下槽函数仅仅在调试时有用
-//用于测试一些函数能否正常运行
-//正式打包发布前请删除该函数及其对应按钮
-/// \Attention
 void SortDisplay::on_startWithdrawButton_released()
 {
     //连续撤回期间禁止使用的窗口操作

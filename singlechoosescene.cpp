@@ -10,6 +10,7 @@ singleChooseScene::singleChooseScene(QWidget* prev,QWidget *parent)
     , previous(prev)
 {
     ui->setupUi(this);
+    this->setWindowTitle("排序类型选择界面");
     //给每个排序选择按钮安排信号槽，跳转到相应的页面
     connect(ui->sortButton1,&QPushButton::clicked,this,[=](){
         SetCase* setcase=new SetCase(1,this);

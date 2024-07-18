@@ -243,75 +243,82 @@ void TreeSelectSort::sort()
 // 树形选择排序（锦标赛排序）函数
 void TreeSelectSort::tournamentSort(std::vector<int>& arr) {
     int n = arr.size();
+    int nodeSum = 2 * n - 1;
+    std::vector<int> tree(nodeSum,0);
 
-    // 生成一个2*n大小的完全二叉树
-    std::vector<int> tree(2 * n, 0);
 
-    // 将数据放到树的叶子节点上,即索引闭区间[n,2n-1].原位置索引i对应此区间内索引n+i
-    for (int i = 0; i < n; ++i) {
-        tree[n + i] = arr[i];
+    ////////////////////////////////////////
+    //给n个最初数据赋予值为0~n-1的顺序标识符值,使用以下辅助数组记录从"树的顺序存储索引"到"对应数据标识符值"的映射
+    std::vector<int> treeIndexToIdentifierVal(nodeSum,-1);
+    //记录"标识符值"到"当前数组arr内元素索引"的映射
+    std::vector<int> identifierValToArrIndexNow(n,-1);
+    //记录"当前数组arr内元素索引"到"标识符值"的映射
+    std::vector<int> arrIndexNowToidentifierVal(n,-1);
+    ///////////////////////////////////////
+
+
+    //录入叶子节点
+    for(int i = n - 1,j = 0 ; i >= 0; i--, j++){
+        tree[nodeSum - j - 1] = arr[i];
+        treeIndexToIdentifierVal[nodeSum - j - 1] = i;
+        identifierValToArrIndexNow[i] = i;
+        arrIndexNowToidentifierVal[i] = i;
     }
-
-    //映射表.索引为"元素在经过一部分交换操作后在部分有序数组内的索引值",而映射值为"元素在初始无序数组内部的索引值"
-    //即从现状到初态
-    //在每一个时刻,mapper[k]表明了当前状态下数组中的元素顺序索引
-    //而k等于上述arr[mapper[k]]当前状态元素,其最初状态下的元素索引
-    std::vector<int> mapper;
-    for(int i = 0; i < n; ++i){
-        mapper.push_back(i);
-    }
-    //初始化.
-    //反向映射器.即从初态到现状
-    std::vector<int> inverseMapper = mapper;
-    //结点映射器.从当前的结点索引映射到对应元素的现状索引
-    std::vector<int> linkMapper(2 * n,0);
-    for(int i=n;i<2 * n;i++){
-        linkMapper[i]=i-n;
-    }
-
-    // 构建树，从叶子节点往上构建.tree[0]没有意义.
-    for (int i = n - 1; i > 0; --i) {
-        if(tree[2 * i]<tree[2 * i + 1]){
-            tree[i]=tree[2 * i];
-            linkMapper[i]=linkMapper[2 * i];
+    //录入非叶子节点,构建初始树
+    for(int i = nodeSum - n - 1;i >= 0; i--){
+        comparing(identifierValToArrIndexNow[treeIndexToIdentifierVal[2*i+1]],identifierValToArrIndexNow[treeIndexToIdentifierVal[2*i+2]]);
+        if(tree[2*i+1]<tree[2*i+2]){
+            tree[i] = tree[2*i+1];
+            treeIndexToIdentifierVal[i] = treeIndexToIdentifierVal[2*i+1];
         }else{
-            tree[i]=tree[2 * i + 1];
-            linkMapper[i]=linkMapper[2 * i + 1];
+            tree[i] = tree[2*i+2];
+            treeIndexToIdentifierVal[i] = treeIndexToIdentifierVal[2*i+2];
         }
-        comparing(linkMapper[2 * i],linkMapper[2 * i + 1]);
     }
 
-    // 逐个找到最小元素并替换.此处的每个循环单元中,发生的交换均需要对应依次mapper的更新
-    for (int i = 0; i < n; ++i) {
-        // i表示"需要让位元素的当前索引"
-        // 根节点就是最小元素.此行为相当于交换了当前状态下的arr[i]和arr[mapper[pos-n]],使得mapper[pos-n]变为mapper[i],而mapper[i]变为mapper[pos-n]
-        // 当前索引为i,原本索引为x(未知)的元素当前索引变为
-        arr[i] = tree[1];
-        // 交换的目标A:索引由i指定.
-        // 交换的目标B:索引由当前的最小元素决定.tree内只记录了该最小元素最初状态下的索引值pos-n.因此引入mapper记忆器
+    //每次找出最小元素并复制到原数组,一共循环n次,也即将所有元素全部排序
+    int k = 0, minindex = -1;
+    while(k < n - 1){
+        //当前的树根节点值即为最小元素
+        //被交换元素具有的标识符值,以及交换前的"当前arr内索引"
+        int identifier_1 = arrIndexNowToidentifierVal[k];
+        int identifier_2 = treeIndexToIdentifierVal[0];
+        int arrIndex_1 = k;
+        int arrIndex_2 = identifierValToArrIndexNow[identifier_2];
 
-        // 找到这个最小元素在树中的位置,查找范围为索引闭区间[n,2n-1]
-        int pos = std::distance(tree.begin(), std::find(tree.begin() + n, tree.end(), tree[1]));
-        swapping(i,inverseMapper[pos-n]);
-        std::swap(mapper[i],mapper[pos-n]);
-        std::swap(inverseMapper[mapper[i]],inverseMapper[mapper[pos-n]]);
-        std::swap(linkMapper[mapper[i]+n],linkMapper[mapper[pos-n]+n]);
+        //开始交换,并修改状态记录
+        swapping(arrIndex_1,arrIndex_2);
+        std::swap(identifierValToArrIndexNow[identifier_1],identifierValToArrIndexNow[identifier_2]);
+        std::swap(arrIndexNowToidentifierVal[arrIndex_1],arrIndexNowToidentifierVal[arrIndex_2]);
+        k++;
+        minindex = treeIndexToIdentifierVal[0] + n - 1;
+        tree[minindex] = INT_MAX;
 
-
-
-        // 用一个大的值替换掉最小元素
-        tree[pos] = INT_MAX;
-
-        // 重新构建树
-        for (int j = pos / 2; j > 0; j /= 2) {
-            if(tree[2 * j]<tree[2 * j + 1]){
-                tree[j]=tree[2 * j];
-                linkMapper[j]=linkMapper[2 * j];
+        //若此节点有父节点，将其兄弟节点值提升到父节点位置
+        while(minindex > 0){
+            if(minindex % 2 == 1){
+                //该节点为左节点
+                comparing(identifierValToArrIndexNow[treeIndexToIdentifierVal[minindex]],identifierValToArrIndexNow[treeIndexToIdentifierVal[minindex + 1]]);
+                if(tree[minindex] < tree[minindex + 1]){
+                    tree[(minindex - 1)/2] = tree[minindex];
+                    treeIndexToIdentifierVal[(minindex - 1)/2] = treeIndexToIdentifierVal[minindex];
+                }else{
+                    tree[(minindex - 1)/2] = tree[minindex + 1];
+                    treeIndexToIdentifierVal[(minindex - 1)/2] = treeIndexToIdentifierVal[minindex + 1];
+                }
+                minindex = (minindex - 1)/2;
             }else{
-                tree[j]=tree[2 * j + 1];
-                linkMapper[j]=linkMapper[2 * j + 1];
+                //该节点为右节点
+                comparing(identifierValToArrIndexNow[treeIndexToIdentifierVal[minindex]],identifierValToArrIndexNow[treeIndexToIdentifierVal[minindex - 1]]);
+                if(tree[minindex] < tree[minindex - 1]){
+                    tree[minindex/2 - 1] = tree[minindex];
+                    treeIndexToIdentifierVal[minindex/2 - 1] = treeIndexToIdentifierVal[minindex];
+                }else{
+                    tree[minindex/2 - 1] = tree[minindex - 1];
+                    treeIndexToIdentifierVal[minindex/2 - 1] = treeIndexToIdentifierVal[minindex - 1];
+                }
+                minindex = minindex/2 - 1;
             }
-            comparing(linkMapper[2 * j],linkMapper[2 * j + 1]);
         }
     }
 }
