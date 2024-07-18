@@ -7,10 +7,12 @@ treedata::treedata(QWidget *prev, QWidget *parent)
     , prev(prev)
 {
     ui->setupUi(this);
+    this->setWindowTitle("树形堆排序样本自定义界面");
     this->setAttribute(Qt::WA_DeleteOnClose);
     // 连接按钮点击信号与槽函数
     connect(ui->randomButton, &QPushButton::clicked, this, &treedata::handleRandomSampleSize);
     connect(ui->selfButton, &QPushButton::clicked, this, &treedata::handleInputData);
+    this->resize(1280,720);
 }
 
 void treedata::handleInputData()

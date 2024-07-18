@@ -1,9 +1,9 @@
 #include "heapsortvisualization.h"
 #include "ui_heapsortvisualization.h"
-#include<memory.h>
-#include"QLabel"
-#include<qpainter.h>
-#include<cmath>
+#include <memory.h>
+#include "QLabel"
+#include <qpainter.h>
+#include <cmath>
 #include <QTime>
 #include <vector>
 #include "treenode.h"
@@ -16,8 +16,9 @@ heapSortVisualization::heapSortVisualization(QWidget* previous,QWidget* chooseSc
     , chooseScene(chooseScene)
     , ui(new Ui::heapSortVisualization)
 {
-    this->setAttribute(Qt::WA_DeleteOnClose);
     ui->setupUi(this);
+    this->setWindowTitle("树形堆排序可视化界面");
+    this->setAttribute(Qt::WA_DeleteOnClose);
     nodes = findChildren<treeNode*>();
     nodesState.resize(15, true); // 初始化nodesState
     // 创建数组栏
@@ -28,12 +29,13 @@ heapSortVisualization::heapSortVisualization(QWidget* previous,QWidget* chooseSc
 
     connect(ui->pushButton, &QPushButton::clicked, this, [=]() {
         start();
-        });
+    });
     connect(ui->pushButton3, &QPushButton::clicked, this, [=]() {
         chooseScene->show();
         prev->close();
         this->close();
-        });
+    });
+    this->resize(1280,720);
 }
 
 void heapSortVisualization::start()

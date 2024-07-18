@@ -29,6 +29,7 @@ public:
     void swapping(int i,int j);
     //请在每次进行比较之前调用如下函数
     bool comparing(int i,int j);
+    void assigning(int i);
 
     //请通过该指针,使用at()函数访问样本数据.
     std::vector<int>* sample;
@@ -62,6 +63,7 @@ signals:
     void swapSignal(int i,int j);
     void cmpSignal(int i,int j);
     void completeSignal();
+    void assignSignal(int i);
 
     void executeWithdrawedAct();
 };
@@ -100,8 +102,7 @@ signals:
 public slots:
     //交换函数,会自动进行颜色标记,不要手动调用
     void animatedSwap(int i, int j);
-
-
+    void animatedAssign(int i);
     void animatedCmp(int i,int j);
     //在排序完成后请调用该函数,将已经排序完成的样本标成绿色.
     void completeMark();

@@ -9,6 +9,7 @@ SortDisplay::SortDisplay(QWidget* prev,std::vector<int>* sampIn,SortObject* sort
     , previous(prev)
 {
     ui->setupUi(this);
+    this->setWindowTitle("排序可视化界面");
     resize(1920,1080);
     sortThread = new QThread();
     withdrawThread = new QThread();
@@ -30,6 +31,7 @@ SortDisplay::SortDisplay(QWidget* prev,std::vector<int>* sampIn,SortObject* sort
     connect(sortObjIn,&SortObject::swapSignal,ui->baseCanva,&BaseCanva::animatedSwap);
     connect(sortObjIn,&SortObject::cmpSignal,ui->baseCanva,&BaseCanva::animatedCmp);
     connect(sortObjIn,&SortObject::completeSignal,ui->baseCanva,&BaseCanva::completeMark);
+    connect(sortObjIn,&SortObject::assignSignal,ui->baseCanva,&BaseCanva::animatedAssign);
     connect(ui->baseCanva,&BaseCanva::finished,this,&SortDisplay::disableAllBtn);
 
     connect(withdrawer,&SortObject::swapSignal,ui->baseCanva,&BaseCanva::animatedSwap);
@@ -54,7 +56,7 @@ SortDisplay::SortDisplay(QWidget* prev,std::vector<int>* sampIn,SortObject* sort
 
     //启动后台线程,后台线程此时将会进入排序函数的逻辑中,并在默认参数下立即暂停等待唤醒函数调用
     sortThread->start();
-    withdrawThread->start();
+    //withdrawThread->start();
 
     switch(sortObjIn->type){
     case 1:ui->sortTypeLabel->setText("直接插入排序");
@@ -84,6 +86,9 @@ SortDisplay::SortDisplay(QWidget* prev,std::vector<int>* sampIn,SortObject* sort
     ui->startWithdrawButton->setDisabled(true);
     ui->pauseButton->setDisabled(true);
     ui->withdrawButton->setDisabled(true);
+
+    ui->withdrawButton->hide();
+    ui->startWithdrawButton->hide();
     //连接测试信号与线程调试信号
     //connect(this,&SortDisplay::testSig,ui->baseCanva->sortObj,&SortObject::testThreadId);
 }

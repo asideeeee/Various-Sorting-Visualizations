@@ -40,9 +40,11 @@ void HalfInsertSort::binaryInsertionSort(std::vector<int>& arr) {
         int key = arr[i];
         int left = 0;
         int right = i - 1;
+        if(interruptRequested)return;
 
         // 使用折半查找找到插入位置
         while (left <= right) {
+            if(interruptRequested)return;
             int mid = left + (right - left) / 2;
             if (arr[mid] > key && comparing(mid,i)) {
                 right = mid - 1;
@@ -53,6 +55,7 @@ void HalfInsertSort::binaryInsertionSort(std::vector<int>& arr) {
 
         // 将插入位置右边的元素向右移动一位
         for (int j = i - 1; j >= left; --j) {
+            if(interruptRequested)return;
             swapping(j, j+1);
         }
     }
@@ -73,10 +76,13 @@ void ShellSort::shellSort(std::vector<int>& arr) {
     size_t n = arr.size();
     // 初始化间隔 gap
     for (size_t gap = n / 2; gap > 0; gap /= 2) {
+        if(interruptRequested)return;
         // 从 gap 位置开始，进行插入排序
         for (size_t i = gap; i < n; ++i) {
+            if(interruptRequested)return;
             // 将 arr[i] 插入到已排好序的子序列中
             for (size_t j = i; j >= gap && arr[j] < arr[j - gap] && comparing(j,j-gap); j -= gap) {
+                if(interruptRequested)return;
                 swapping(j, j - gap);
             }
         }
@@ -99,8 +105,10 @@ void BubbleSort::optimizedBubbleSort(std::vector<int>& arr) {
     size_t n = arr.size();
     bool swapped;
     for (size_t i = 0; i < n - 1; ++i) {
+        if(interruptRequested)return;
         swapped = false;
         for (size_t j = 0; j < n - i - 1; ++j) {
+            if(interruptRequested)return;
             if (arr[j] > arr[j + 1] && comparing(j,j+1)) {
                 swapping(j,j+1);
                 swapped = true;
@@ -127,6 +135,7 @@ void QuickSort::sort()
 
 void QuickSort::quickSort(std::vector<int>& arr, int left, int right) {
     if (left < right) {
+        if(interruptRequested)return;
         int pivotIndex = partition(arr, left, right);
         quickSort(arr, left, pivotIndex - 1);
         quickSort(arr, pivotIndex + 1, right);
@@ -138,6 +147,7 @@ int QuickSort::partition(std::vector<int>& arr, int left, int right) {
     int i = left - 1; // i 是小于枢轴的元素的索引
 
     for (int j = left; j < right; ++j) {
+        if(interruptRequested)return 0;
         if (arr[j] <= pivot && comparing(j,right)) {
             ++i;
             swapping(i,j);
@@ -164,8 +174,10 @@ void SimpleSelectSort::selectionSort(std::vector<int>& arr) {
     for (size_t i = 0; i < n - 1; ++i) {
         // 假设最小元素的索引为i
         size_t minIndex = i;
+        if(interruptRequested)return;
         // 寻找未排序部分的最小元素
         for (size_t j = i + 1; j < n; ++j) {
+            if(interruptRequested)return;
             if (arr[j] < arr[minIndex] && comparing(j,minIndex)) {
                 minIndex = j;
             }
@@ -194,11 +206,13 @@ void HeapSort::heapSort(std::vector<int>& arr) {
 
     // 构建初始最大堆
     for (int i = n / 2 - 1; i >= 0; --i) {
+        if(interruptRequested)return;
         heapify(arr, n, i);
     }
 
     // 逐个从堆中取出元素并进行堆调整
     for (int i = n - 1; i > 0; --i) {
+        if(interruptRequested)return;
         swapping(0,i);
         heapify(arr, i, 0);
     }
@@ -253,7 +267,7 @@ void TreeSelectSort::tournamentSort(std::vector<int>& arr) {
     //记录"标识符值"到"当前数组arr内元素索引"的映射
     std::vector<int> identifierValToArrIndexNow(n,-1);
     //记录"当前数组arr内元素索引"到"标识符值"的映射
-    std::vector<int> arrIndexNowToidentifierVal(n,-1);
+    std::vector<int> arrIndexNowToIdentifierVal(n,-1);
     ///////////////////////////////////////
 
 
@@ -262,10 +276,11 @@ void TreeSelectSort::tournamentSort(std::vector<int>& arr) {
         tree[nodeSum - j - 1] = arr[i];
         treeIndexToIdentifierVal[nodeSum - j - 1] = i;
         identifierValToArrIndexNow[i] = i;
-        arrIndexNowToidentifierVal[i] = i;
+        arrIndexNowToIdentifierVal[i] = i;
     }
     //录入非叶子节点,构建初始树
     for(int i = nodeSum - n - 1;i >= 0; i--){
+        if(interruptRequested)return;
         comparing(identifierValToArrIndexNow[treeIndexToIdentifierVal[2*i+1]],identifierValToArrIndexNow[treeIndexToIdentifierVal[2*i+2]]);
         if(tree[2*i+1]<tree[2*i+2]){
             tree[i] = tree[2*i+1];
@@ -279,9 +294,10 @@ void TreeSelectSort::tournamentSort(std::vector<int>& arr) {
     //每次找出最小元素并复制到原数组,一共循环n次,也即将所有元素全部排序
     int k = 0, minindex = -1;
     while(k < n - 1){
+        if(interruptRequested)return;
         //当前的树根节点值即为最小元素
         //被交换元素具有的标识符值,以及交换前的"当前arr内索引"
-        int identifier_1 = arrIndexNowToidentifierVal[k];
+        int identifier_1 = arrIndexNowToIdentifierVal[k];
         int identifier_2 = treeIndexToIdentifierVal[0];
         int arrIndex_1 = k;
         int arrIndex_2 = identifierValToArrIndexNow[identifier_2];
@@ -289,13 +305,14 @@ void TreeSelectSort::tournamentSort(std::vector<int>& arr) {
         //开始交换,并修改状态记录
         swapping(arrIndex_1,arrIndex_2);
         std::swap(identifierValToArrIndexNow[identifier_1],identifierValToArrIndexNow[identifier_2]);
-        std::swap(arrIndexNowToidentifierVal[arrIndex_1],arrIndexNowToidentifierVal[arrIndex_2]);
+        std::swap(arrIndexNowToIdentifierVal[arrIndex_1],arrIndexNowToIdentifierVal[arrIndex_2]);
         k++;
         minindex = treeIndexToIdentifierVal[0] + n - 1;
         tree[minindex] = INT_MAX;
 
         //若此节点有父节点，将其兄弟节点值提升到父节点位置
         while(minindex > 0){
+            if(interruptRequested)return;
             if(minindex % 2 == 1){
                 //该节点为左节点
                 comparing(identifierValToArrIndexNow[treeIndexToIdentifierVal[minindex]],identifierValToArrIndexNow[treeIndexToIdentifierVal[minindex + 1]]);
@@ -336,49 +353,50 @@ void MergeSort::sort()
     emit completeSignal();
 }
 
-// 二路归并排序函数定义
-void MergeSort::mergeSort(std::vector<int>& arr, int left, int right) {
-    if (left < right) {
-        int mid = left + (right - left) / 2;
-        mergeSort(arr, left, mid);
-        mergeSort(arr, mid + 1, right);
-        merge(arr, left, mid, right);
-    }
+
+void MergeSort::mergeSort(std::vector<int>& R,int s,int t) //被MergeSort2调用
+{
+    if (s>=t) return;			//R[s..t]的长度为0或者1时返回
+    int m=(s+t)/2;			//取中间位置m
+    mergeSort(R,s,m);		//对前子表排序
+    mergeSort(R,m+1,t);		//对后子表排序
+    merge(R,s,m,t);			//将两个有序子表合并成一个有序表
 }
 
-// 合并两个已排序数组的辅助函数定义
-void MergeSort::merge(std::vector<int>& arr, int left, int mid, int right) {
-    int n1 = mid - left + 1;
-    int n2 = right - mid;
 
-    // 创建临时数组来存储左右两个子数组
-    std::vector<int> leftArr(n1);
-    std::vector<int> rightArr(n2);
-
-    // 将数据复制到临时数组中
-    for (int i = 0; i < n1; ++i) {
-        leftArr[i] = arr[left + i];
-    }
-    for (int j = 0; j < n2; ++j) {
-        rightArr[j] = arr[mid + 1 + j];
-    }
-
-    // 合并临时数组并将结果存回原数组
-    int i = 0, j = 0, k = left;
-    while (i < n1 && j < n2) {
-        if (leftArr[i] <= rightArr[j]) {
-            arr[k++] = leftArr[i++];
-        } else {
-            arr[k++] = rightArr[j++];
+void MergeSort::merge(std::vector<int>& R,int low,int mid,int high)
+//将R[low..mid]和R[mid+1..high]两个有序段归并为一个有序段R[low..high]
+{
+    std::vector<int> R1;
+    R1.resize(high-low+1);	    //设置R1的长度为high-low+1
+    int i=low,j=mid+1,k=0;	    //k是R1的下标,i、j分别为第1、2段的下标
+    while (i<=mid && j<=high)	    //在第1段和第2段均未扫描完时循环
+    {
+        if (R[i]<=R[j] && comparing(i,j))		    //将第1段中的元素放入R1中
+        {
+            R1[k]=R[i];
+            i++; k++;
+        }
+        else			    //将第2段中的元素放入R1中
+        {
+            R1[k]=R[j];
+            j++; k++;
         }
     }
-
-    // 将剩余的元素复制回原数组
-    while (i < n1) {
-        arr[k++] = leftArr[i++];
+    while (i<=mid)		    //将第1段余下部分复制到R1
+    {
+        R1[k]=R[i];
+        i++; k++;
     }
-    while (j < n2) {
-        arr[k++] = rightArr[j++];
+    while (j<=high)		    //将第2段余下部分复制到R1
+    {
+        R1[k]=R[j];
+        j++; k++;
+    }
+    for (k=0,i=low;i<=high;k++,i++){
+        //将R1复制回R中
+        R[i]=R1[k];
+        assigning(i);
     }
 }
 
@@ -441,6 +459,7 @@ void RadixSort::countSort(std::vector<int>& arr, int exp) {
     // 将排序后的数组复制回原数组
     for (int i = 0; i < n; ++i) {
         arr[i] = output[i];
+        assigning(i);
     }
 }
 

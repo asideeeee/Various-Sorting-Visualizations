@@ -14,6 +14,7 @@ SetCase::SetCase(int sortType,QWidget* prev,QWidget *parent)
     , sortType(sortType)
 {
     ui->setupUi(this);
+    this->setWindowTitle("排序样本自定义界面");
     switch(sortType)
     {
     case 1:
@@ -46,7 +47,7 @@ SetCase::SetCase(int sortType,QWidget* prev,QWidget *parent)
         break;
     case 8:
         ui->titleLabel->setText("树形选择排序");
-        ui->textLabel->setText("时间复杂度：\n平均：O(n log n)\n最低：O(n log n)\n最高：O(n^2)\n稳定性：稳定\n\n简介：树形选择排序利用二叉搜索树（BST）来对待排序序列进行排序，它通过不断地将元素插入到 BST 中，然后进行中序遍历，从而得到有序序列。\n树形选择排序的时间复杂度为 O(n log n)，它是一种稳定的排序算法。");
+        ui->textLabel->setText("时间复杂度：\n平均：O(n log n)\n最低：O(n log n)\n最高：O(n log n)\n稳定性：稳定\n\n简介：树形选择排序利用二叉搜索树（BST）来对待排序序列进行排序，它通过不断地将元素插入到 BST 中，然后进行中序遍历，从而得到有序序列。\n树形选择排序的时间复杂度为 O(n log n)，它是一种稳定的排序算法。");
         break;
     case 9:
         ui->titleLabel->setText("归并排序");

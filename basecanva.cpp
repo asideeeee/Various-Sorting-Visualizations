@@ -149,6 +149,36 @@ void BaseCanva::animatedCmp(int i, int j)
 }
 
 
+//强制赋值动画,为非原地排序算法而准备
+void BaseCanva::animatedAssign(int i)
+{
+    allRect[lastI]->setBrush(Qt::white);
+    allRect[lastJ]->setBrush(Qt::white);
+    lastI = lastJ = i;
+    qDebug()<<"assign signal receive"<<i;
+    allRect[i]->setBrush(QColor(0x33ccff));
+
+    //画布大小参数
+    const int width=this->width();
+    const int height=this->height();
+
+    //以下是计算获得的每个长方体的大小参数
+    const double averageWidth=width/(double)cap;
+    const double heightWeight=(height-topSpace)/(double)maxDifference;
+
+    double newHeight = heightWeight*sample->at(i);
+    allRect[i]->setRect(0, 0, averageWidth, newHeight);
+    allRect[i]->setPos(leftSpace + averageWidth * i, height - bottomSpace - newHeight);
+
+    QEventLoop loop;
+    QTimer::singleShot(interval, &loop, &QEventLoop::quit);
+    loop.exec();
+
+    sortObj->tryNextStepSort();
+    return;
+}
+
+
 //在排序完成后调用该函数,将已经排序完成的样本标成绿色.
 void BaseCanva::completeMark()
 {
@@ -186,7 +216,6 @@ void SortCompleteThread::run()
     for(int i=0;i<cap;i++){
         arr->at(i)->setBrush(Qt::green);
         QThread::usleep(1);
-        //QThread::msleep(1);
         emit updateRequest();
     }
     return;
@@ -212,6 +241,14 @@ bool SortObject::comparing(int i, int j)
     emit cmpSignal(i,j);
     pause();
     return true;
+}
+
+void SortObject::assigning(int i)
+{
+    qDebug()<<"assign signal send"<<i;
+    emit assignSignal(i);
+    pause();
+    return;
 }
 
 

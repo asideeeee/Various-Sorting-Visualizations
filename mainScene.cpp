@@ -11,6 +11,8 @@ Widget::Widget(QWidget *parent)
 {
     ui->setupUi(this);
     this->resize(1280,720);
+    this->setAttribute(Qt::WA_DeleteOnClose);
+    this->setWindowTitle("主界面");
 
     connect(ui->singleSortBtn,&QPushButton::clicked,this,[=](){
         chooseScene=new singleChooseScene(this);
