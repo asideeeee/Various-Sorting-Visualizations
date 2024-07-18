@@ -196,6 +196,7 @@ void BaseCanva::animatedAssign(int i)
 void BaseCanva::completeMark()
 {
     SortCompleteThread* temp = new SortCompleteThread(cap,&allRect,lastI,lastJ);
+    completeThread = temp;
     connect(temp, &QThread::finished, temp, &QObject::deleteLater);
     connect(temp,&SortCompleteThread::updateRequest,this,[=]{
         viewport()->update();
@@ -227,6 +228,8 @@ void SortCompleteThread::run()
     arr->at(lastJ)->setBrush(Qt::white);
 
     for(int i=0;i<cap;i++){
+        if(isInterruptionRequested())
+            return;
         arr->at(i)->setBrush(Qt::green);
         QThread::usleep(1);
         emit updateRequest();

@@ -121,6 +121,7 @@ public:
     std::vector<RectItem*> allRect;
     QGraphicsScene *scene;
     WithdrawSort *withdrawSortObj;
+    QThread* completeThread = nullptr;
     bool withdrawing = false;
 
     //样本参数记录
