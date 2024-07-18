@@ -38,6 +38,8 @@ private slots:
 
     void disableAllBtn();
 
+    void updatingData(qint64 time);
+
 signals:
     void displayWindowClosed();
 

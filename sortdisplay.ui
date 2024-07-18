@@ -55,48 +55,6 @@
      <item>
       <layout class="QVBoxLayout" name="displayVLayout">
        <item>
-        <layout class="QHBoxLayout" name="progressHLayout">
-         <item>
-          <widget class="QLabel" name="label_5">
-           <property name="text">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;排序进度&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLCDNumber" name="progressLCD">
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>15</pointsize>
-            </font>
-           </property>
-           <property name="digitCount">
-            <number>6</number>
-           </property>
-           <property name="segmentStyle">
-            <enum>QLCDNumber::Flat</enum>
-           </property>
-           <property name="value" stdset="0">
-            <double>0.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_6">
-           <property name="text">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;(%)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
         <layout class="QHBoxLayout" name="swapTimesHLayout">
          <item>
           <widget class="QLabel" name="label">
@@ -174,7 +132,7 @@
          <item>
           <widget class="QLabel" name="label_3">
            <property name="text">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;(ms)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;(s)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
           </widget>
          </item>
@@ -190,7 +148,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLCDNumber" name="cmpTimesLCD">
+          <widget class="QLCDNumber" name="cmpTimeLCD">
            <property name="maximumSize">
             <size>
              <width>16777215</width>
@@ -215,6 +173,48 @@
          </item>
          <item>
           <widget class="QLabel" name="label_8">
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;(次)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="cmpTimesHLayout_2">
+         <item>
+          <widget class="QLabel" name="label_12">
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;赋值次数&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLCDNumber" name="assignTimeLCD">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>15</pointsize>
+            </font>
+           </property>
+           <property name="digitCount">
+            <number>6</number>
+           </property>
+           <property name="segmentStyle">
+            <enum>QLCDNumber::Flat</enum>
+           </property>
+           <property name="value" stdset="0">
+            <double>0.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_13">
            <property name="text">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;(次)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>

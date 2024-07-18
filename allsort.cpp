@@ -5,6 +5,7 @@
 void SimpleInsertSort::sort()
 {
     pause();
+    timer.start();
     if(interruptRequested)return;
     InsertSort(*sample,sample->size());
     if(interruptRequested)return;
@@ -18,7 +19,6 @@ void SimpleInsertSort::InsertSort(std::vector<int>& R,int n) 	//直接插入排�
         int j = i;
         while (j > 0 && comparing(j,j-1) && R[j] < R[j - 1]) {
             swapping(j,j-1);
-            //std::swap(R[j], R[j - 1]);
             --j;
         }
     }
@@ -29,6 +29,7 @@ void SimpleInsertSort::InsertSort(std::vector<int>& R,int n) 	//直接插入排�
 void HalfInsertSort::sort()
 {
     pause();
+    timer.start();
     if(interruptRequested)return;
     binaryInsertionSort(*sample);
     if(interruptRequested)return;
@@ -66,6 +67,7 @@ void HalfInsertSort::binaryInsertionSort(std::vector<int>& arr) {
 void ShellSort::sort()
 {
     pause();
+    timer.start();
     if(interruptRequested)return;
     shellSort(*sample);
     if(interruptRequested)return;
@@ -95,6 +97,7 @@ void ShellSort::shellSort(std::vector<int>& arr) {
 void BubbleSort::sort()
 {
     pause();
+    timer.start();
     if(interruptRequested)return;
     optimizedBubbleSort(*sample);
     if(interruptRequested)return;
@@ -127,6 +130,7 @@ void BubbleSort::optimizedBubbleSort(std::vector<int>& arr) {
 void QuickSort::sort()
 {
     pause();
+    timer.start();
     if(interruptRequested)return;
     quickSort(*sample,0,sample->size()-1);
     if(interruptRequested)return;
@@ -145,7 +149,6 @@ void QuickSort::quickSort(std::vector<int>& arr, int left, int right) {
 int QuickSort::partition(std::vector<int>& arr, int left, int right) {
     int pivot = arr[right]; // 选择最右边的元素作为枢轴
     int i = left - 1; // i 是小于枢轴的元素的索引
-
     for (int j = left; j < right; ++j) {
         if(interruptRequested)return 0;
         if (arr[j] <= pivot && comparing(j,right)) {
@@ -163,6 +166,7 @@ int QuickSort::partition(std::vector<int>& arr, int left, int right) {
 void SimpleSelectSort::sort()
 {
     pause();
+    timer.start();
     if(interruptRequested)return;
     selectionSort(*sample);
     if(interruptRequested)return;
@@ -195,6 +199,7 @@ void SimpleSelectSort::selectionSort(std::vector<int>& arr) {
 void HeapSort::sort()
 {
     pause();
+    timer.start();
     if(interruptRequested)return;
     heapSort(*sample);
     if(interruptRequested)return;
@@ -248,6 +253,7 @@ void HeapSort::heapify(std::vector<int>& arr, int n, int i) {
 void TreeSelectSort::sort()
 {
     pause();
+    timer.start();
     if(interruptRequested)return;
     tournamentSort(*sample);
     if(interruptRequested)return;
@@ -273,6 +279,7 @@ void TreeSelectSort::tournamentSort(std::vector<int>& arr) {
 
     //录入叶子节点
     for(int i = n - 1,j = 0 ; i >= 0; i--, j++){
+        assigning();
         tree[nodeSum - j - 1] = arr[i];
         treeIndexToIdentifierVal[nodeSum - j - 1] = i;
         identifierValToArrIndexNow[i] = i;
@@ -280,6 +287,7 @@ void TreeSelectSort::tournamentSort(std::vector<int>& arr) {
     }
     //录入非叶子节点,构建初始树
     for(int i = nodeSum - n - 1;i >= 0; i--){
+        assigning();
         if(interruptRequested)return;
         comparing(identifierValToArrIndexNow[treeIndexToIdentifierVal[2*i+1]],identifierValToArrIndexNow[treeIndexToIdentifierVal[2*i+2]]);
         if(tree[2*i+1]<tree[2*i+2]){
@@ -313,6 +321,7 @@ void TreeSelectSort::tournamentSort(std::vector<int>& arr) {
         //若此节点有父节点，将其兄弟节点值提升到父节点位置
         while(minindex > 0){
             if(interruptRequested)return;
+            assigning();
             if(minindex % 2 == 1){
                 //该节点为左节点
                 comparing(identifierValToArrIndexNow[treeIndexToIdentifierVal[minindex]],identifierValToArrIndexNow[treeIndexToIdentifierVal[minindex + 1]]);
@@ -347,6 +356,7 @@ void TreeSelectSort::tournamentSort(std::vector<int>& arr) {
 void MergeSort::sort()
 {
     pause();
+    timer.start();
     if(interruptRequested)return;
     mergeSort(*sample,0,sample->size()-1);
     if(interruptRequested)return;
@@ -372,6 +382,8 @@ void MergeSort::merge(std::vector<int>& R,int low,int mid,int high)
     int i=low,j=mid+1,k=0;	    //k是R1的下标,i、j分别为第1、2段的下标
     while (i<=mid && j<=high)	    //在第1段和第2段均未扫描完时循环
     {
+        if(interruptRequested)return;
+        assigning();
         if (R[i]<=R[j] && comparing(i,j))		    //将第1段中的元素放入R1中
         {
             R1[k]=R[i];
@@ -385,15 +397,20 @@ void MergeSort::merge(std::vector<int>& R,int low,int mid,int high)
     }
     while (i<=mid)		    //将第1段余下部分复制到R1
     {
+        if(interruptRequested)return;
+        assigning();
         R1[k]=R[i];
         i++; k++;
     }
     while (j<=high)		    //将第2段余下部分复制到R1
     {
+        if(interruptRequested)return;
+        assigning();
         R1[k]=R[j];
         j++; k++;
     }
     for (k=0,i=low;i<=high;k++,i++){
+        if(interruptRequested)return;
         //将R1复制回R中
         R[i]=R1[k];
         assigning(i);
@@ -407,6 +424,7 @@ void MergeSort::merge(std::vector<int>& R,int low,int mid,int high)
 void RadixSort::sort()
 {
     pause();
+    timer.start();
     if(interruptRequested)return;
     radixSort(*sample);
     if(interruptRequested)return;
@@ -419,6 +437,7 @@ void RadixSort::radixSort(std::vector<int>& arr) {
 
     // 对每一位进行计数排序
     for (int exp = 1; maxNum / exp > 0; exp *= 10) {
+        if(interruptRequested)return;
         countSort(arr, exp);
     }
 }
@@ -427,7 +446,9 @@ void RadixSort::radixSort(std::vector<int>& arr) {
 int RadixSort::getMax(std::vector<int>& arr) {
     int maxNum = arr[0];
     for (size_t i = 1; i < arr.size(); ++i) {
+        if(interruptRequested)return 0;
         if (arr[i] > maxNum) {
+            assigning();
             maxNum = arr[i];
         }
     }
@@ -442,22 +463,29 @@ void RadixSort::countSort(std::vector<int>& arr, int exp) {
 
     // 计算每个数字出现的次数
     for (int i = 0; i < n; ++i) {
+        if(interruptRequested)return;
+        assigning();
         count[(arr[i] / exp) % 10]++;
     }
 
     // 将 count[i] 转换为当前数字的位置
     for (int i = 1; i < 10; ++i) {
+        if(interruptRequested)return;
+        assigning();
         count[i] += count[i - 1];
     }
 
     // 构造排序后的数组
     for (int i = n - 1; i >= 0; --i) {
+        if(interruptRequested)return;
         output[count[(arr[i] / exp) % 10] - 1] = arr[i];
+        assigning();
         count[(arr[i] / exp) % 10]--;
     }
 
     // 将排序后的数组复制回原数组
     for (int i = 0; i < n; ++i) {
+        if(interruptRequested)return;
         arr[i] = output[i];
         assigning(i);
     }

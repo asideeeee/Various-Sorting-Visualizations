@@ -29,7 +29,7 @@ public:
     void swapping(int i,int j);
     //请在每次进行比较之前调用如下函数
     bool comparing(int i,int j);
-    void assigning(int i);
+    void assigning(int i = -1);
 
     //请通过该指针,使用at()函数访问样本数据.
     std::vector<int>* sample;
@@ -46,6 +46,8 @@ public:
 
     QMutex mutex;               //主线程锁
     QWaitCondition condition;   //条件锁定器
+    QElapsedTimer timer;
+    qint64 timeCost = 0;
 
 public slots:
     //排序算法函数.这一函数应该放有排序算法的核心逻辑.
@@ -98,6 +100,7 @@ public:
 
 signals:
     void finished();
+    void dataUpdate(qint64 time);
 
 public slots:
     //交换函数,会自动进行颜色标记,不要手动调用
@@ -146,6 +149,7 @@ public:
     //记录排序统计数据
     int cmpCount = 0;
     int swapCount = 0;
+    int assignCount = 0;
 };
 
 

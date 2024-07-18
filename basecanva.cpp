@@ -72,7 +72,6 @@ void BaseCanva::animatedSwap(int i,int j)
 {
     allRect[lastI]->setBrush(Qt::white);
     allRect[lastJ]->setBrush(Qt::white);
-    qDebug()<<"swap slot receive"<<i<<j;
     int duration = interval;
     swapping1 = i;
     swapping2 = j;
@@ -118,6 +117,8 @@ void BaseCanva::animatedSwap(int i,int j)
             sortObj->tryNextStepSort();
         }
     });
+    swapCount++;
+    emit dataUpdate(sortObj->timeCost);
     return;
 }
 
@@ -125,7 +126,6 @@ void BaseCanva::animatedSwap(int i,int j)
 //比较函数,效果上相当于返回sample[i]<sample[j].在编写排序算法时,进行样本间比较请使用该函数.
 void BaseCanva::animatedCmp(int i, int j)
 {
-    qDebug()<<"comp slot receive"<<i<<j;
     allRect[lastI]->setBrush(Qt::white);
     allRect[lastJ]->setBrush(Qt::white);
     lastI=i;
@@ -145,6 +145,8 @@ void BaseCanva::animatedCmp(int i, int j)
     }else{
         sortObj->tryNextStepSort();
     }
+    cmpCount++;
+    emit dataUpdate(sortObj->timeCost);
     return;
 }
 
@@ -152,10 +154,18 @@ void BaseCanva::animatedCmp(int i, int j)
 //强制赋值动画,为非原地排序算法而准备
 void BaseCanva::animatedAssign(int i)
 {
+    if(i == -1){
+        assignCount++;
+        QEventLoop loop;
+        QTimer::singleShot(interval, &loop, &QEventLoop::quit);
+        loop.exec();
+        emit dataUpdate(sortObj->timeCost);
+        sortObj->tryNextStepSort();
+        return;
+    }
     allRect[lastI]->setBrush(Qt::white);
     allRect[lastJ]->setBrush(Qt::white);
     lastI = lastJ = i;
-    qDebug()<<"assign signal receive"<<i;
     allRect[i]->setBrush(QColor(0x33ccff));
 
     //画布大小参数
@@ -173,6 +183,9 @@ void BaseCanva::animatedAssign(int i)
     QEventLoop loop;
     QTimer::singleShot(interval, &loop, &QEventLoop::quit);
     loop.exec();
+
+    assignCount++;
+    emit dataUpdate(sortObj->timeCost);
 
     sortObj->tryNextStepSort();
     return;
@@ -215,7 +228,6 @@ void SortCompleteThread::run()
 
     for(int i=0;i<cap;i++){
         arr->at(i)->setBrush(Qt::green);
-        QThread::usleep(1);
         emit updateRequest();
     }
     return;
@@ -227,7 +239,6 @@ void SortCompleteThread::run()
 void SortObject::swapping(int i, int j)
 {
     if(i==j)return;
-    qDebug()<<"swap signal send:"<<i<<j;
     emit swapSignal(i,j);
     std::swap(sample->at(i),sample->at(j));
     pause();
@@ -237,7 +248,6 @@ void SortObject::swapping(int i, int j)
 
 bool SortObject::comparing(int i, int j)
 {
-    qDebug()<<"comp signal send:"<<i<<j;
     emit cmpSignal(i,j);
     pause();
     return true;
@@ -245,7 +255,6 @@ bool SortObject::comparing(int i, int j)
 
 void SortObject::assigning(int i)
 {
-    qDebug()<<"assign signal send"<<i;
     emit assignSignal(i);
     pause();
     return;
@@ -255,8 +264,10 @@ void SortObject::assigning(int i)
 void SortObject::pause()
 {
     mutex.lock();
-    if(!interruptRequested)
+    timeCost = timer.elapsed();
+    if(!interruptRequested){
         condition.wait(&mutex);
+    }
     mutex.unlock();
     return;
 }
@@ -274,7 +285,6 @@ void SortObject::setSingleStepMode()
 void SortObject::tryNextStepSort()
 {
     mutex.lock();
-
     if(!singleStepMode)
         condition.wakeAll();
     mutex.unlock();
@@ -312,18 +322,6 @@ SortObject::SortObject(int type,std::vector<int>* sampIn,QObject *parent)
     , type(type)
 {}
 
-
-
-////////////////////////////////////////////////////
-/// \brief SortObject::testThreadId
-/// 测试用函数,发布前删除
-/*
-void SortObject::testThreadId()
-{
-    qDebug()<<"Sort Thread's id is"<<QThread::currentThreadId();
-    return;
-}
-*/
 
 void WithdrawSort::sort()
 {

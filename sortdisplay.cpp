@@ -1,6 +1,5 @@
 #include "sortdisplay.h"
 #include "ui_sortdisplay.h"
-#include <QDebug>
 
 
 SortDisplay::SortDisplay(QWidget* prev,std::vector<int>* sampIn,SortObject* sortObjIn,QWidget *parent)
@@ -14,7 +13,7 @@ SortDisplay::SortDisplay(QWidget* prev,std::vector<int>* sampIn,SortObject* sort
     sortThread = new QThread();
     withdrawThread = new QThread();
     WithdrawSort* withdrawer = new WithdrawSort(sortObjIn->sample);
-
+    connect(ui->baseCanva,&BaseCanva::dataUpdate,this,&SortDisplay::updatingData);
 
     //初始化画布数据
     ui->baseCanva->sample=sampIn;
@@ -275,6 +274,15 @@ void SortDisplay::disableAllBtn()
     this->setMinimumSize(QSize(0, 0));
     this->setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
 
+    return;
+}
+
+void SortDisplay::updatingData(qint64 time)
+{
+    ui->swapTimeLCD->display(ui->baseCanva->swapCount);
+    ui->cmpTimeLCD->display(ui->baseCanva->cmpCount);
+    ui->assignTimeLCD->display(ui->baseCanva->assignCount);
+    ui->timeCostLCD->display(static_cast<double>(time / 1000.0));
     return;
 }
 
