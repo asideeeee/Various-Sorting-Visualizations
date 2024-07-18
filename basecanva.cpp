@@ -228,6 +228,7 @@ void SortCompleteThread::run()
 
     for(int i=0;i<cap;i++){
         arr->at(i)->setBrush(Qt::green);
+        QThread::usleep(1);
         emit updateRequest();
     }
     return;
