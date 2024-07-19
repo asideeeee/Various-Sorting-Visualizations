@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>setCase</class>
- <widget class="QWidget" name="setCase">
+ <class>setcase_second</class>
+ <widget class="QWidget" name="setcase_second">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>931</width>
-    <height>549</height>
+    <width>1125</width>
+    <height>734</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>样本选择界面</string>
+   <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_3">
+  <layout class="QVBoxLayout" name="verticalLayout_5">
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,4,0,8,1,1,0">
+    <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0,0,8,1,0">
      <property name="leftMargin">
       <number>25</number>
      </property>
@@ -23,7 +23,7 @@
       <number>25</number>
      </property>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,4,16,6">
+      <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,0,0,0">
        <item>
         <widget class="QPushButton" name="backBtn">
          <property name="minimumSize">
@@ -49,7 +49,7 @@
         </widget>
        </item>
        <item>
-        <spacer name="horizontalSpacer_10">
+        <spacer name="horizontalSpacer_9">
          <property name="orientation">
           <enum>Qt::Orientation::Horizontal</enum>
          </property>
@@ -62,22 +62,14 @@
         </spacer>
        </item>
        <item>
-        <widget class="QLabel" name="titleLabel">
-         <property name="font">
-          <font>
-           <pointsize>20</pointsize>
-          </font>
-         </property>
+        <widget class="QLabel" name="label_5">
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;样本自定义设置&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignCenter</set>
+          <string>选择数据样本以及排序算法</string>
          </property>
         </widget>
        </item>
        <item>
-        <spacer name="horizontalSpacer_9">
+        <spacer name="horizontalSpacer_10">
          <property name="orientation">
           <enum>Qt::Orientation::Horizontal</enum>
          </property>
@@ -92,21 +84,41 @@
       </layout>
      </item>
      <item>
-      <widget class="QLabel" name="textLabel">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;TextLabel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
+      <widget class="QWidget" name="widget_3" native="true">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QWidget" name="widget" native="true">
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <widget class="QComboBox" name="first_sort_index"/>
+           </item>
+           <item>
+            <widget class="QLabel" name="title1">
+             <property name="text">
+              <string>待选择</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="widget_2" native="true">
+          <layout class="QVBoxLayout" name="verticalLayout_2">
+           <item>
+            <widget class="QComboBox" name="second_sort_index"/>
+           </item>
+           <item>
+            <widget class="QLabel" name="title2">
+             <property name="text">
+              <string>待选择</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
      <item>
@@ -128,7 +140,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="label_3">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
@@ -155,9 +167,9 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout_2" stretch="2">
+        <layout class="QVBoxLayout" name="verticalLayout_4" stretch="2">
          <item>
           <widget class="QPushButton" name="customizeBtn">
            <property name="minimumSize">
@@ -199,7 +211,7 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="5,2,4,2,5">
+      <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="5,2,4,5">
        <item>
         <spacer name="horizontalSpacer_5">
          <property name="orientation">
@@ -250,24 +262,6 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="sequentialBtn">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>45</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>15</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>顺序样本</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <spacer name="horizontalSpacer_6">
          <property name="orientation">
           <enum>Qt::Orientation::Horizontal</enum>
@@ -283,44 +277,7 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_5">
-       <item>
-        <spacer name="horizontalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Orientation::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700;&quot;&gt;样本当前状态:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_4">
-         <property name="orientation">
-          <enum>Qt::Orientation::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="4,3,2,2">
+      <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="4,3,2,2">
        <item>
         <spacer name="horizontalSpacer_8">
          <property name="orientation">

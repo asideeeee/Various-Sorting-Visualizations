@@ -2,7 +2,7 @@
 #include "./ui_mainScene.h"
 #include"singlechoosescene.h"
 #include"heapsortvisualization.h"
-
+#include"setcase_second.h"
 //此窗口的逻辑编写已完成
 
 Widget::Widget(QWidget *parent)
@@ -26,6 +26,10 @@ Widget::Widget(QWidget *parent)
         //this->hide();
         //chooseScene->show();
         //出于测试需要,暂时注释掉
+        setcase_second*newScene=new setcase_second(this,nullptr);
+        newScene->setAttribute(Qt::WA_DeleteOnClose);
+        this->hide();
+        newScene->show();
     });
 }
 

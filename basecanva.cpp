@@ -236,7 +236,6 @@ void SortCompleteThread::run()
     return;
 }
 
-
 //////////////////////////
 /// \brief SortObject类
 void SortObject::swapping(int i, int j)

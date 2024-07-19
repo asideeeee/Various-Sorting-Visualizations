@@ -101,7 +101,7 @@ SortDisplay::~SortDisplay()
         ui->baseCanva->sortObj->resumeSort();
         sortThread->wait();
     }
-    if(ui->baseCanva->completeThread->isRunning()){
+    if(ui->baseCanva->completeThread){
         ui->baseCanva->completeThread->requestInterruption();
         ui->baseCanva->completeThread->quit();
         ui->baseCanva->completeThread->wait();
